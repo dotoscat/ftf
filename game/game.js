@@ -1,6 +1,6 @@
 var screen;
-var images;
-var sounds;
+var images = {};
+var sounds = {};
 var meters = 250;
 var hours = 0;
 var min = 0;
@@ -10,16 +10,35 @@ var km_h = 0;
 
 var key_enter = 13;
 
+var main;
+var engine;
+var currentscene;
+
 function load(){
     screen = document.getElementById("screen").getContext('2d');
     screen.save();//save initial state 1
-    images = new Array();
-    sounds = new Array();
+    //load images
+    var image_files = {
+        "balloon": "balloon.png",
+        "kitten": "pitr_Kitty_icon.png",
+        "arrow": "Anonymous_Arrow_Down_Red.png"
+    }
+    for(var name in image_files){
+        images[name] = new Image();
+        images[name].src = "game/"+image_files[name];
+    }
+    //
+    main = new Main();
+    engine = new Engine();
+    currentscene = main;
     setInterval(game_run, 1000/60);
 }
 
 function keydown(key){
     currentscene.keydown(key);
+}
+
+function keyup(key){
 }
 
 function draw_text(text, color, x, y){
@@ -34,19 +53,43 @@ function Sprite(image){
     this.x = 0;
     this.y = 0;
     this.Draw = function(){
+        screen.save();
         screen.globalAlpha = this.alpha;
-        screen.drawImage(this.image, x, y);
-        screen.globalAlpha = 1.0;
+        screen.drawImage(this.image, this.x, this.y);
+        screen.restore();
     }
     this.setAlpha = function(alpha){
-        this.alpha = this.alpha / 255.0;}
+        this.alpha = alpha / 255.0;}
+}
+
+//Kitten
+function Kitten(){
+    this.sprite = new Sprite(images["kitten"]);
+    this.Update = function(){
+        //Update body with sprite
+    }
+    this.Draw = function(){
+        this.sprite.Draw();
+    }
+}
+
+//Explosive
+function Explosive(){
 }
 
 //Engine scene
 function Engine(){
-    this.something = 12;
+    this.kitten = new Kitten();
+    this.kitten.x = 0;
+    this.kitten.y = 0;
+    this.kitten.sprite.setAlpha(128);
+    this.explosives = new Array(7);
+    for (i = 0; i < 7; i += 1){
+        this.explosives[i] = new Explosive();
+    }
     this.Run = function(){
         draw_text("Put some action here!", "black", 120, 120);
+        this.kitten.Draw();
     }
     this.keydown = function(){
     }
@@ -68,10 +111,8 @@ function Main(){
     }
 }
 
-var main = new Main();
-var engine = new Engine();
-var currentscene = main;
 document.onkeydown = keydown;
+document.onkeyup = keyup;
 
 function game_run(){
     //clear the canvas with "skyblue"

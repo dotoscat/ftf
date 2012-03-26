@@ -14,6 +14,8 @@ var main;
 var engine;
 var currentscene;
 
+var i = 0;
+
 function load(){
     screen = document.getElementById("screen").getContext('2d');
     screen.save();//save initial state 1
@@ -53,12 +55,24 @@ function Sprite(image){
     this.alpha = 1.0;
     this.x = 0;
     this.y = 0;
+    this.originx = 0;
+    this.originy = 0;
+    
     this.Draw = function(){
         screen.globalAlpha = this.alpha;
+        screen.translate(-this.originx, -this.originy);
         screen.drawImage(this.image, this.x, this.y);
+        screen.translate(this.originx, this.originy);
     }
+    
     this.setAlpha = function(alpha){
         this.alpha = alpha / 255.0;}
+    
+    this.setOrigin = function(originx, originy){
+        this.originx = originx;
+        this.originy = originy;
+    }
+    
 }
 
 function Text(str){
@@ -79,15 +93,10 @@ function Text(str){
 }
 
 //Kitten
-function Kitten(body){
+function Kitten(){
     this.sprite = new Sprite(images["kitten"]);
-    this.body = body;
     
     this.Update = function(){
-        var pos = this.body.GetPosition();
-        meters = pos.y;
-        this.sprite.x = pos.x;
-        this.sprite.y = pos.y;
     }
     
     this.Draw = function(){
@@ -104,15 +113,11 @@ function Explosive(){
 
 //Engine scene
 function Engine(){
-    this.explosives = new Array(7);
-    this.world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0.0, 9.8), true);
-    
-    var basicbodydef = new Box2D.Dynamics.b2BodyDef();
-    basicbodydef.type = 2;//dynamic
-    
-    this.kitten = new Kitten(this.world.CreateBody(basicbodydef));
-    this.kitten.sprite.x = 320;
-    this.kitten.sprite.y = 320;
+    this.explosives = new Array(7);    
+    this.kitten = new Kitten();
+    this.kitten.sprite.setOrigin(32, 32);
+    this.kitten.sprite.x = 0;
+    this.kitten.sprite.y = 0;
     this.kitten.sprite.setAlpha(50);
     
     for (i = 0; i < 7; i += 1){
@@ -120,7 +125,6 @@ function Engine(){
     }
     
     this.Run = function(){
-        this.world.Step(1000/60);
         draw_text("Put some action here!", "black", 120, 120);
         for (i = 0; i < 7; i += 1){
             this.explosives[i].Draw();

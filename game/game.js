@@ -88,6 +88,8 @@ function Kitten(){
 
 //Explosive
 function Explosive(){
+    this.Draw = function(){
+    }
 }
 
 //Engine scene
@@ -97,11 +99,19 @@ function Engine(){
     this.kitten.y = 0;
     this.kitten.sprite.setAlpha(50);
     this.explosives = new Array(7);
+    this.world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0.0, -9.8), true);
     for (i = 0; i < 7; i += 1){
         this.explosives[i] = new Explosive();
     }
     this.Run = function(){
+        this.world.Step(1000/16);
         draw_text("Put some action here!", "black", 120, 120);
+        var explosives = this.explosives;
+        var screen = screen;
+        for (i = 0; i < 7; i += 1){
+            explosives[i].Draw();
+        }
+        this.kitten.Update();
         this.kitten.Draw();
     }
     this.keydown = function(){

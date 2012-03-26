@@ -42,6 +42,7 @@ function keyup(key){
 }
 
 function draw_text(text, color, x, y){
+    screen.globalAlpha = 1.0;
     screen.fillStyle = color;
     screen.fillText(text, x, y);
 }
@@ -53,10 +54,22 @@ function Sprite(image){
     this.x = 0;
     this.y = 0;
     this.Draw = function(){
-        screen.save();
         screen.globalAlpha = this.alpha;
         screen.drawImage(this.image, this.x, this.y);
-        screen.restore();
+    }
+    this.setAlpha = function(alpha){
+        this.alpha = alpha / 255.0;}
+}
+
+function Text(str){
+    this.str = str;
+    this.alpha = 1.0;
+    this.x = 0;
+    this.y = 0;
+    this.Draw = function(){
+        screen.globalAlpha = this.alpha;
+        screen.fillStyle = color;
+        screen.fillText(text, x, y);
     }
     this.setAlpha = function(alpha){
         this.alpha = alpha / 255.0;}
@@ -82,7 +95,7 @@ function Engine(){
     this.kitten = new Kitten();
     this.kitten.x = 0;
     this.kitten.y = 0;
-    this.kitten.sprite.setAlpha(128);
+    this.kitten.sprite.setAlpha(50);
     this.explosives = new Array(7);
     for (i = 0; i < 7; i += 1){
         this.explosives[i] = new Explosive();

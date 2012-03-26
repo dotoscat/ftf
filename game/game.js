@@ -66,24 +66,34 @@ function Text(str){
     this.alpha = 1.0;
     this.x = 0;
     this.y = 0;
+    
     this.Draw = function(){
         screen.globalAlpha = this.alpha;
         screen.fillStyle = color;
         screen.fillText(text, x, y);
     }
+    
     this.setAlpha = function(alpha){
         this.alpha = alpha / 255.0;}
+        
 }
 
 //Kitten
-function Kitten(){
+function Kitten(body){
     this.sprite = new Sprite(images["kitten"]);
+    this.body = body;
+    
     this.Update = function(){
-        //Update body with sprite
+        var pos = this.body.GetPosition();
+        meters = pos.y;
+        this.sprite.x = pos.x;
+        this.sprite.y = pos.y;
     }
+    
     this.Draw = function(){
         this.sprite.Draw();
     }
+    
 }
 
 //Explosive
@@ -94,44 +104,56 @@ function Explosive(){
 
 //Engine scene
 function Engine(){
-    this.kitten = new Kitten();
-    this.kitten.x = 0;
-    this.kitten.y = 0;
-    this.kitten.sprite.setAlpha(50);
     this.explosives = new Array(7);
-    this.world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0.0, -9.8), true);
+    this.world = new Box2D.Dynamics.b2World(new Box2D.Common.Math.b2Vec2(0.0, 9.8), true);
+    
+    var basicbodydef = new Box2D.Dynamics.b2BodyDef();
+    basicbodydef.type = 2;//dynamic
+    
+    this.kitten = new Kitten(this.world.CreateBody(basicbodydef));
+    this.kitten.sprite.x = 320;
+    this.kitten.sprite.y = 320;
+    this.kitten.sprite.setAlpha(50);
+    
     for (i = 0; i < 7; i += 1){
         this.explosives[i] = new Explosive();
     }
+    
     this.Run = function(){
-        this.world.Step(1000/16);
+        this.world.Step(1000/60);
         draw_text("Put some action here!", "black", 120, 120);
-        var explosives = this.explosives;
-        var screen = screen;
         for (i = 0; i < 7; i += 1){
-            explosives[i].Draw();
+            this.explosives[i].Draw();
         }
         this.kitten.Update();
         this.kitten.Draw();
+        draw_text(meters+" meters", "black", 16, 6);
+        draw_text(hours+":"+min+":"+secs+":"+msecs, "black", 320, 32);
+        draw_text(km_h+" km/h", "black", 0, 32);
     }
+    
     this.keydown = function(){
     }
+    
 }
 
 //Main scene
 function Main(){
     this.title = "Free For Fall";
+    
     this.Run = function(){
         draw_text(this.title, "black", 64, 64);
         draw_text(meters + " meters/"+hours+":"+min+":"+secs+":"+msecs, "black", 120, 120);
         draw_text("Max km/h: "+km_h, "black", 320, 120);
         draw_text("Press enter to start", "black", 120, 240);
     }
+    
     this.keydown = function(key){
         if (key.keyCode == key_enter){
             currentscene = engine;
         }
     }
+    
 }
 
 document.onkeydown = keydown;

@@ -4,6 +4,7 @@
 #include <chipmunk/chipmunk.h>
 #include "scene.hpp"
 #include "kitty.hpp"
+#include "clock.hpp"
 
 #define PIXELSTOMETERS(x) x/10.f
 #define METERSTOPIXELS(x) x*10.f
@@ -15,6 +16,8 @@ namespace fff{
         sf::View camera;
         sf::Sprite floor;
         cpShape *shapefloor;
+        fff::clock engineclock;
+        sf::Text clock;
         sf::Text speed;
         sf::Text km_h;
         sf::Text height;

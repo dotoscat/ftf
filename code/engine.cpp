@@ -22,6 +22,8 @@ fff::engine::engine(){
     meters.SetString("meters");
     meters.SetColor(sf::Color::Black);
     meters.SetPosition(120, 30);
+    clock.SetColor(sf::Color::Black);
+    clock.SetPosition(300, 32);
 }
 
 fff::engine::~engine(){
@@ -38,6 +40,7 @@ void fff::engine::Reset(){
     kitty.setInitialFallingSpeed(lua_tonumber(game.vm, -1));
     lua_pop(game.vm, 1);//startvel
     lua_pop(game.vm, 1);//engine
+    engineclock.Reset();
 }
 
 void fff::engine::loadResources(){
@@ -64,6 +67,9 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
     height.SetString(buffer);
     
     time += currenttime;
+    engineclock.Update(currenttime);
+    clock.SetString( engineclock.getString() );
+    
     if (time >= 1000){
         // time <= 1 sec
         //generate events
@@ -87,5 +93,6 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
     rendertarget.Draw(km_h);
     rendertarget.Draw(height);
     rendertarget.Draw(meters);
+    rendertarget.Draw(clock);
     //
 }

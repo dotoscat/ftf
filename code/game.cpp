@@ -1,3 +1,6 @@
+#include <string>
+#include <iostream>
+#include <lua5.1/lua.hpp>
 #include "game.hpp"
 
 fff::_game::_game(){
@@ -10,14 +13,42 @@ fff::_game::_game(){
 
 fff::_game::~_game(){
 
-    for(int i = 0; i < textures.size(); i += 1){
-        delete textures[i];
+    std::map<std::string, sf::Texture *>::iterator atexture;
+    for(atexture = textures.begin(); atexture != textures.end(); atexture++){
+        delete atexture->second;
     }
     
-    for(int i = 0; i < soundbuffers.size(); i += 1){
-        delete soundbuffers[i];
+    std::map<std::string, sf::SoundBuffer *>::iterator asoundbuffer;
+    for(asoundbuffer = soundbuffers.begin(); asoundbuffer != soundbuffers.end(); asoundbuffer++){
+        delete asoundbuffer->second;
     }
     
+    std::map<std::string, sf::Font *>::iterator afont;
+    for(afont = fonts.begin(); afont != fonts.end(); afont++){
+        delete afont->second;
+    }
+
+}
+
+void fff::_game::LoadResources(){
+    lua_State *vm = luaL_newstate();
+    if (luaL_dofile(vm, "code/fff.lua")){
+        std::cout << lua_tostring(vm, -1) << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    
+    lua_getglobal(vm, "fonts");
+    lua_pushnil(vm);
+    while(lua_next(vm, -2)){
+        fonts[lua_tostring(vm, -2)] = new sf::Font();
+        std::string game("game/");
+        std::string file(lua_tostring(vm, -1));
+        fonts[lua_tostring(vm, -2)]->LoadFromFile( game+file );
+        lua_pop(vm, 1);//next
+    }
+    lua_pop(vm, 1);//fonts
+    
+    lua_close(vm);
 }
 
 void fff::_game::Run(){

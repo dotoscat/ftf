@@ -76,6 +76,7 @@ void fff::_game::loadResources(){
 
 void fff::_game::startEngine(){
     currentscene = &engine;
+    engine.Reset();
 }
 
 void fff::_game::Run(){

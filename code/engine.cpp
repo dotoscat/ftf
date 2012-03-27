@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdio>
+#include <cfloat>
 #include "engine.hpp"
 #include "game.hpp"
 
@@ -9,6 +10,10 @@ fff::engine::engine(){
     cpSpaceAddBody(space, kitty.body);
     shapefloor = cpSegmentShapeNew(cpSpaceGetStaticBody(space), (cpVect){0.f, 4.f}, (cpVect){640.f, 4.f}, 4.f);
     cpSpaceAddShape(space, shapefloor);
+    shapeleftlimit = cpSegmentShapeNew(cpSpaceGetStaticBody(space), (cpVect){-4.f, 0.f}, (cpVect){-4.f, -FLT_MAX}, 4.f);
+    cpSpaceAddShape(space, shapeleftlimit);
+    shaperightlimit = cpSegmentShapeNew(cpSpaceGetStaticBody(space), (cpVect){640+4.f, 0.f}, (cpVect){640+4.f, -FLT_MAX}, 4.f);
+    cpSpaceAddShape(space, shaperightlimit);
     floor.SetPosition(0, 0);
     camera.SetCenter(320, 240);
     camera.SetSize(640, 480);
@@ -28,6 +33,8 @@ fff::engine::engine(){
 
 fff::engine::~engine(){
     cpShapeFree(shapefloor);
+    cpShapeFree(shapeleftlimit);
+    cpShapeFree(shaperightlimit);
     cpSpaceFree(space);
 }
 

@@ -61,7 +61,17 @@ void fff::engine::Event(sf::Event &event){
                 kitty.moveRight();
             break;
         }
+    }else if(event.Type == sf::Event::KeyReleased){
+        switch(event.Key.Code){
+            case sf::Keyboard::Left:
+                kitty.stopMovingLeft();
+            break;
+            case sf::Keyboard::Right:
+                kitty.stopMovingRight();
+            break;
+        }
     }
+    
 }
 
 void fff::engine::Run(sf::RenderTarget &rendertarget){

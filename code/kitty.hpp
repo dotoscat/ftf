@@ -17,7 +17,9 @@ namespace fff{
         void setInitialFallingSpeed(float);
         void setPosition(float, float);
         void moveLeft();
+        void stopMovingLeft();
         void moveRight();
+        void stopMovingRight();
         float getHeight();
         float getVerticalSpeed();
         void Update();

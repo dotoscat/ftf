@@ -31,8 +31,16 @@ void fff::kitty::moveLeft(){
     cpBodyApplyImpulse(body, (cpVect){-640.f, 0.f}, cpvzero);
 }
 
+void fff::kitty::stopMovingLeft(){
+    cpBodyApplyImpulse(body, (cpVect){640.f, 0.f}, cpvzero);
+}
+
 void fff::kitty::moveRight(){
     cpBodyApplyImpulse(body, (cpVect){640.f, 0.f}, cpvzero);
+}
+
+void fff::kitty::stopMovingRight(){
+    cpBodyApplyImpulse(body, (cpVect){-640.f, 0.f}, cpvzero);
 }
 
 float fff::kitty::getHeight(){

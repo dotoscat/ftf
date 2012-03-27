@@ -5,9 +5,10 @@
 #include <chipmunk/chipmunk.h>
 
 namespace fff{
-    //free for fall body
+
     struct kitty{
         cpBody *body;
+        cpShape *shape;
         sf::Sprite sprite;
         
         kitty();

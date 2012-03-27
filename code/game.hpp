@@ -33,6 +33,7 @@ namespace fff{
         _game();
         ~_game();
         void loadResources();
+        void startEngine();
         void Run();
         
     };

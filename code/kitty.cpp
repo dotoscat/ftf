@@ -11,11 +11,11 @@ fff::kitty::~kitty(){
 
 void fff::kitty::setPosition(float x, float y){
     cpVect pos = {x, y};
-    cpBodySetPosition(body, pos);
+    cpBodySetPos(body, pos);
 }
 
 float fff::kitty::getHeight(){
-    cpVect pos = cpBodyGetPosition(body);
+    cpVect pos = cpBodyGetPos(body);
     return pos.y;
 }
 

@@ -13,7 +13,9 @@ fff::mainscene::mainscene(){
 }
 
 void fff::mainscene::Event(sf::Event &event){
-
+    if (event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Return){
+        game.startEngine();
+    }
 }
 
 void fff::mainscene::Run(sf::RenderTarget &rendertarget){

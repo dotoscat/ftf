@@ -6,7 +6,7 @@ fff::_game::_game(){
     
     realwindow.Create(sf::VideoMode(640, 480), "Free For Fall", sf::Style::Titlebar | sf::Style::Close);
     realwindow.SetFramerateLimit(60);
-    clearcolor = sf::Color::White;
+    clearcolor = sf::Color(135, 206, 255);
     lostfocus = false;
     
     currentscene = &mainscene;
@@ -70,6 +70,12 @@ void fff::_game::loadResources(){
     }
     lua_pop(vm, 1);//fonts
     
+    engine.loadResources();
+    
+}
+
+void fff::_game::startEngine(){
+    currentscene = &engine;
 }
 
 void fff::_game::Run(){

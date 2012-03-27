@@ -1,6 +1,5 @@
 #include <string>
 #include <iostream>
-#include <lua5.1/lua.hpp>
 #include "game.hpp"
 
 fff::_game::_game(){
@@ -9,6 +8,9 @@ fff::_game::_game(){
     clearcolor = sf::Color::White;
     lostfocus = false;
     
+    currentscene = &mainscene;
+    
+    vm = luaL_newstate();
 }
 
 fff::_game::~_game(){
@@ -28,10 +30,12 @@ fff::_game::~_game(){
         delete afont->second;
     }
 
+    lua_close(vm);
+
 }
 
-void fff::_game::LoadResources(){
-    lua_State *vm = luaL_newstate();
+void fff::_game::loadResources(){
+
     if (luaL_dofile(vm, "code/fff.lua")){
         std::cout << lua_tostring(vm, -1) << std::endl;
         exit(EXIT_FAILURE);
@@ -43,12 +47,12 @@ void fff::_game::LoadResources(){
         fonts[lua_tostring(vm, -2)] = new sf::Font();
         std::string game("game/");
         std::string file(lua_tostring(vm, -1));
-        fonts[lua_tostring(vm, -2)]->LoadFromFile( game+file );
+        if (!fonts[lua_tostring(vm, -2)]->LoadFromFile( game+file )){
+            std::cout << "Error loding font: " << lua_tostring(vm, -1) << std::endl;;}
         lua_pop(vm, 1);//next
     }
     lua_pop(vm, 1);//fonts
     
-    lua_close(vm);
 }
 
 void fff::_game::Run(){

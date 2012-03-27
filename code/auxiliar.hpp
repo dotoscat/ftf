@@ -8,6 +8,7 @@
 namespace fff{
     
     void SetOriginByLua(lua_State *, sf::Drawable &, const char *);
+    float GetRadiusByLua(lua_State *, const char *);
     
 }
 

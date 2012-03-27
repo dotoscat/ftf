@@ -13,6 +13,7 @@ namespace fff{
         
         kitty();
         ~kitty();
+        void Configure();
         void setInitialFallingSpeed(float);
         void setPosition(float, float);
         float getHeight();

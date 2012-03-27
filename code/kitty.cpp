@@ -1,6 +1,7 @@
 #include <iostream>
 #include "kitty.hpp"
 #include "game.hpp"
+#include "auxiliar.hpp"
 
 fff::kitty::kitty(){
     body = cpBodyNew(1.f, INFINITY);
@@ -8,6 +9,12 @@ fff::kitty::kitty(){
 
 fff::kitty::~kitty(){
     cpBodyFree(body);
+    cpShapeFree(shape);
+}
+
+void fff::kitty::Configure(){
+    fff::SetOriginByLua(game.vm, sprite, "kitty");
+    shape = cpCircleShapeNew(body, fff::GetRadiusByLua(game.vm, "kitty"), (cpVect){0.f, 0.f} );
 }
 
 void fff::kitty::setInitialFallingSpeed(float speed){

@@ -13,7 +13,6 @@ namespace fff{
     class engine: public fff::scene{
         cpSpace *space;
         sf::View camera;
-        fff::kitty kitty;
         sf::Sprite floor;
         cpShape *shapefloor;
         sf::Text speed;
@@ -22,6 +21,8 @@ namespace fff{
         sf::Text meters;
         
         sf::Uint32 time;
+        
+        fff::kitty kitty;
         
         public:
             engine();

@@ -41,6 +41,8 @@ void fff::engine::Reset(){
 }
 
 void fff::engine::loadResources(){
+    kitty.Configure();
+    cpSpaceAddShape(space, kitty.shape);
     floor.SetTexture(*game.textures["floor"]);
     kitty.sprite.SetTexture(*game.textures["kitty"]);
     kitty.Update();
@@ -51,6 +53,7 @@ void fff::engine::Event(sf::Event &event){
 
 void fff::engine::Run(sf::RenderTarget &rendertarget){
     sf::Uint32 currenttime = game.realwindow.GetFrameTime();
+    cpSpaceStep(space, currenttime/1000.f);
     
     char buffer[8] = {0};
     
@@ -60,7 +63,6 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
     snprintf(buffer, 8, "%g", PIXELSTOMETERS(-kitty.getHeight()) );
     height.SetString(buffer);
     
-    cpSpaceStep(space, currenttime/1000.f);
     time += currenttime;
     if (time >= 1000){
         // time <= 1 sec

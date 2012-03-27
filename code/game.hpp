@@ -8,6 +8,7 @@
 #include <SFML/Audio.hpp>
 #include "scene.hpp"
 #include "mainscene.hpp"
+#include "engine.hpp"
 
 namespace fff{
 
@@ -26,6 +27,7 @@ namespace fff{
         std::map<std::string, sf::Font *> fonts;
         
         fff::mainscene mainscene;
+        fff::engine engine;
         fff::scene *currentscene;
         
         _game();

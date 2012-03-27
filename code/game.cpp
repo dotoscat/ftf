@@ -4,7 +4,8 @@
 
 fff::_game::_game(){
     
-    realwindow.Create(sf::VideoMode(640, 480), "Free For Fall");
+    realwindow.Create(sf::VideoMode(640, 480), "Free For Fall", sf::Style::Titlebar | sf::Style::Close);
+    realwindow.SetFramerateLimit(60);
     clearcolor = sf::Color::White;
     lostfocus = false;
     
@@ -41,14 +42,30 @@ void fff::_game::loadResources(){
         exit(EXIT_FAILURE);
     }
     
+    std::string game("game/");
+    std::string file;
+    
+    //load textures
+    lua_getglobal(vm, "textures");
+    lua_pushnil(vm);
+    while(lua_next(vm, -2)){
+        textures[lua_tostring(vm, -2)] = new sf::Texture();
+        file = lua_tostring(vm, -1);
+        if (!textures[lua_tostring(vm, -2)]->LoadFromFile( game+file )){
+            std::cout << "Error loding textures: " << file << std::endl;}
+        lua_pop(vm, 1);//next
+    }
+    lua_pop(vm, 1);//textures
+    //
+    
+    //load fonts
     lua_getglobal(vm, "fonts");
     lua_pushnil(vm);
     while(lua_next(vm, -2)){
         fonts[lua_tostring(vm, -2)] = new sf::Font();
-        std::string game("game/");
-        std::string file(lua_tostring(vm, -1));
+        file = lua_tostring(vm, -1);
         if (!fonts[lua_tostring(vm, -2)]->LoadFromFile( game+file )){
-            std::cout << "Error loding font: " << lua_tostring(vm, -1) << std::endl;;}
+            std::cout << "Error loding font: " << file << std::endl;}
         lua_pop(vm, 1);//next
     }
     lua_pop(vm, 1);//fonts

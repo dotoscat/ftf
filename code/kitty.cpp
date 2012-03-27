@@ -27,6 +27,14 @@ void fff::kitty::setPosition(float x, float y){
     cpBodySetPos(body, pos);
 }
 
+void fff::kitty::moveLeft(){
+    cpBodyApplyImpulse(body, (cpVect){-640.f, 0.f}, cpvzero);
+}
+
+void fff::kitty::moveRight(){
+    cpBodyApplyImpulse(body, (cpVect){640.f, 0.f}, cpvzero);
+}
+
 float fff::kitty::getHeight(){
     cpVect pos = cpBodyGetPos(body);
     return pos.y;

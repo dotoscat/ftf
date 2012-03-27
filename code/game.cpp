@@ -6,6 +6,7 @@ fff::_game::_game(){
     
     realwindow.Create(sf::VideoMode(640, 480), "Free For Fall", sf::Style::Titlebar | sf::Style::Close);
     realwindow.SetFramerateLimit(60);
+    realwindow.EnableKeyRepeat(false);
     clearcolor = sf::Color(135, 206, 255);
     lostfocus = false;
     

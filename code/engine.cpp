@@ -52,6 +52,16 @@ void fff::engine::loadResources(){
 }
 
 void fff::engine::Event(sf::Event &event){
+    if (event.Type == sf::Event::KeyPressed){
+        switch(event.Key.Code){
+            case sf::Keyboard::Left:
+                kitty.moveLeft();
+            break;
+            case sf::Keyboard::Right:
+                kitty.moveRight();
+            break;
+        }
+    }
 }
 
 void fff::engine::Run(sf::RenderTarget &rendertarget){

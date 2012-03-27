@@ -11,8 +11,7 @@ fff::kitty::~kitty(){
 }
 
 void fff::kitty::setInitialFallingSpeed(float speed){
-    //this speed in in km/h transform to meters/s
-    cpVect vel = {0, speed*1000.f/60.f/60.f};
+    cpVect vel = {0, speed};
     cpBodySetVel(body, vel);
 }
 

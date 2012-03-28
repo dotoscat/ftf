@@ -19,7 +19,7 @@ void fff::kitty::Configure(){
 }
 
 void fff::kitty::setInitialFallingSpeed(float speed){
-    cpVect vel = {0, speed};
+    cpVect vel = {0, speed*10.f};
     cpBodySetVel(body, vel);
 }
 
@@ -51,7 +51,7 @@ float fff::kitty::getHeight(){
 
 float fff::kitty::getVerticalSpeed(){
     cpVect vel = cpBodyGetVel(body);
-    return vel.y;
+    return vel.y/10.f;
 }
 
 bool fff::kitty::isFalling(){

@@ -7,8 +7,10 @@
 #include "clock.hpp"
 #include "explosive.hpp"
 
-#define PIXELSTOMETERS(x) x/10.f
-#define METERSTOPIXELS(x) x*10.f
+#define PIXELSTOMETERS(x) x/100.f
+#define METERSTOPIXELS(x) x*100.f
+
+#define MAXEXPLOSIVES 2
 
 namespace fff{
     
@@ -27,7 +29,7 @@ namespace fff{
         sf::Uint32 time;
         
         fff::kitty kitty;
-        fff::explosive explosive[7];
+        fff::explosive explosive[MAXEXPLOSIVES];
         
         public:
             engine();
@@ -38,7 +40,7 @@ namespace fff{
             void Run(sf::RenderTarget &);
         
         protected:
-            void createExplosive();
+            int createExplosive();
             bool generateExplosive();
             bool generateExplosiveWhileFalling();
         

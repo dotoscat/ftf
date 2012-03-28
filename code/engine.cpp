@@ -56,8 +56,9 @@ void fff::engine::loadResources(){
     floor.SetTexture(*game.textures["floor"]);
     kitty.sprite.SetTexture(*game.textures["kitty"]);
     kitty.Update();
-    for (int i = 0; i < 7; i += 1){
+    for (int i = 0; i < MAXEXPLOSIVES; i += 1){
         explosive[i].prepareShape(space);
+        explosive[i].loadResources();
     }
 }
 
@@ -105,12 +106,19 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
     if ( this->generateExplosive() ){
         
         if (kitty.isFalling() && this->generateExplosiveWhileFalling() ){
-            this->createExplosive();
+            int i = this->createExplosive();
+            if (i < MAXEXPLOSIVES){
+                explosive[i].setArrowAtBottom();
+                float x = 0.f;
+                while(x <= 80 || x > 400){
+                    x = rand() % 400;}
+                explosive[i].setPosition( x, -(rand()%METERSTOPIXELS(250)) );
+            }
         }
         time = 0;
     }
     
-    std::cout << "lua gettop: " << lua_gettop(game.vm) << std::endl;
+    //std::cout << "lua gettop: " << lua_gettop(game.vm) << std::endl;
     
     sf::Vector2f camerapos = camera.GetCenter();
     //std::cout << "Height: " << kitty.getHeight() << std::endl;
@@ -122,14 +130,21 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
     }
     rendertarget.SetView(camera);
     rendertarget.Draw(kitty.sprite);
-    for (int i = 0; i < 7; i += 1){
+    for (int i = 0; i < MAXEXPLOSIVES; i += 1){
         if (!explosive[i].exists){
             continue;}
+        explosive[i].Update( kitty.getHeight() );
         rendertarget.Draw(explosive[i].sprite);
     }
     rendertarget.Draw(floor);
     //draw hud
     rendertarget.SetView( rendertarget.GetDefaultView() );
+    for(int i = 0; i < MAXEXPLOSIVES; i += 1){
+        if (!explosive[i].exists){
+            continue;}
+        rendertarget.Draw(explosive[i].arrow);
+        rendertarget.Draw(explosive[i].meters);
+    }
     rendertarget.Draw(speed);
     rendertarget.Draw(km_h);
     rendertarget.Draw(height);
@@ -138,12 +153,14 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
     //
 }
 
-void fff::engine::createExplosive(){
+int fff::engine::createExplosive(){
     
-    for(int i = 0; i < 7; i += 1){
+    int i = 0;
+    
+    for(; i < MAXEXPLOSIVES; i += 1){
         if (explosive[i].exists){
             continue;}
-            
+        
         lua_getglobal(game.vm, "explosives");
         lua_pushnil(game.vm);
         while( lua_next(game.vm, -2) ){
@@ -153,15 +170,16 @@ void fff::engine::createExplosive(){
             if ( (rand()%101) <= lua_tonumber(game.vm, -1) ){
                 lua_pop(game.vm, 1);//appareance
                 explosive[i].Configure(lua_tostring(game.vm, -2));//-1 is table, -2 key
-                lua_pop(game.vm, 2);//table and key
+                lua_pop(game.vm, 2);//table(next) and key
                 break;
             }
-            lua_pop(game.vm, 1);//next
+            lua_pop(game.vm, 2);//apparance and next
         }
         lua_pop(game.vm, 1);//explosives
         break;
         
     }
+    return i;
 }
 
 bool fff::engine::generateExplosive(){

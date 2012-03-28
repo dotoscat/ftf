@@ -2,9 +2,7 @@
 #define _explosive_
 
 #include <SFML/Graphics.hpp>
-#include <chipmunk/chimpunk.h>
-#include "auxiliar.hpp"
-#include "game.hpp"
+#include <chipmunk/chipmunk.h>
 
 namespace fff{
     
@@ -19,6 +17,8 @@ namespace fff{
         
         explosive();
         ~explosive();
+        void prepareShape(cpSpace *);
+        void Configure(const char *);
         
     };
     

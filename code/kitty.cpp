@@ -1,3 +1,4 @@
+#include <cmath>
 #include <iostream>
 #include "kitty.hpp"
 #include "game.hpp"
@@ -51,6 +52,20 @@ float fff::kitty::getHeight(){
 float fff::kitty::getVerticalSpeed(){
     cpVect vel = cpBodyGetVel(body);
     return vel.y;
+}
+
+bool fff::kitty::isFalling(){
+    cpVect vel = cpBodyGetVel(body);
+    if( vel.y > 0.f){
+        return true;}
+    return false;
+}
+
+bool fff::kitty::isClimbing(){
+    cpVect vel = cpBodyGetVel(body);
+    if( vel.y < 0.f){
+        return true;}
+    return false;
 }
 
 void fff::kitty::Update(){

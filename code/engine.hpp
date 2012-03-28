@@ -5,6 +5,7 @@
 #include "scene.hpp"
 #include "kitty.hpp"
 #include "clock.hpp"
+#include "explosive.hpp"
 
 #define PIXELSTOMETERS(x) x/10.f
 #define METERSTOPIXELS(x) x*10.f
@@ -26,6 +27,7 @@ namespace fff{
         sf::Uint32 time;
         
         fff::kitty kitty;
+        fff::explosive explosive[7];
         
         public:
             engine();
@@ -35,6 +37,10 @@ namespace fff{
             void Event(sf::Event &);
             void Run(sf::RenderTarget &);
         
+        protected:
+            void createExplosive();
+            bool generateExplosive();
+            bool generateExplosiveWhileFalling();
         
     };
     

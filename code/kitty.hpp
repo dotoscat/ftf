@@ -22,6 +22,8 @@ namespace fff{
         void stopMovingRight();
         float getHeight();
         float getVerticalSpeed();
+        bool isFalling();
+        bool isClimbing();
         void Update();
          
     };

@@ -56,6 +56,9 @@ void fff::engine::loadResources(){
     floor.SetTexture(*game.textures["floor"]);
     kitty.sprite.SetTexture(*game.textures["kitty"]);
     kitty.Update();
+    for (int i = 0; i < 7; i += 1){
+        explosive[i].prepareShape(space);
+    }
 }
 
 void fff::engine::Event(sf::Event &event){
@@ -97,12 +100,18 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
     engineclock.Update(currenttime);
     clock.SetString( engineclock.getString() );
     
-    if (time >= 1000){
-        // time <= 1 sec
-        //generate events
-        time = 0; 
-    }
     kitty.Update();
+    
+    if ( this->generateExplosive() ){
+        
+        if (kitty.isFalling() && this->generateExplosiveWhileFalling() ){
+            this->createExplosive();
+        }
+        time = 0;
+    }
+    
+    std::cout << "lua gettop: " << lua_gettop(game.vm) << std::endl;
+    
     sf::Vector2f camerapos = camera.GetCenter();
     //std::cout << "Height: " << kitty.getHeight() << std::endl;
     //camerapos.y = kitty.getHeight();
@@ -113,6 +122,11 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
     }
     rendertarget.SetView(camera);
     rendertarget.Draw(kitty.sprite);
+    for (int i = 0; i < 7; i += 1){
+        if (!explosive[i].exists){
+            continue;}
+        rendertarget.Draw(explosive[i].sprite);
+    }
     rendertarget.Draw(floor);
     //draw hud
     rendertarget.SetView( rendertarget.GetDefaultView() );
@@ -122,4 +136,50 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
     rendertarget.Draw(meters);
     rendertarget.Draw(clock);
     //
+}
+
+void fff::engine::createExplosive(){
+    
+    for(int i = 0; i < 7; i += 1){
+        if (explosive[i].exists){
+            continue;}
+            
+        lua_getglobal(game.vm, "explosives");
+        lua_pushnil(game.vm);
+        while( lua_next(game.vm, -2) ){
+            //key
+            //The top is a table
+            lua_getfield(game.vm, -1, "appareance");
+            if ( (rand()%101) <= lua_tonumber(game.vm, -1) ){
+                lua_pop(game.vm, 1);//appareance
+                explosive[i].Configure(lua_tostring(game.vm, -2));//-1 is table, -2 key
+                lua_pop(game.vm, 2);//table and key
+                break;
+            }
+            lua_pop(game.vm, 1);//next
+        }
+        lua_pop(game.vm, 1);//explosives
+        break;
+        
+    }
+}
+
+bool fff::engine::generateExplosive(){
+    lua_getglobal(game.vm, "engine");
+    lua_getfield(game.vm, -1, "explosiveeach");
+    bool generate = false;
+    if ( time > lua_tonumber(game.vm, -1)){
+        generate = true;}
+    lua_pop(game.vm, 2);//engine and explosiveeach
+    return generate;
+}
+
+bool fff::engine::generateExplosiveWhileFalling(){
+    bool generate = false;
+    lua_getglobal(game.vm, "engine");
+    lua_getfield(game.vm, -1, "explosivefalling");
+    if ( (rand() % 101) <= lua_tonumber(game.vm, -1)){
+        generate = true;}
+    lua_pop(game.vm, 2);//explosivefalling and engine
+    return generate;
 }

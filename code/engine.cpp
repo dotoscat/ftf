@@ -121,19 +121,22 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
     //std::cout << "lua gettop: " << lua_gettop(game.vm) << std::endl;
     
     sf::Vector2f camerapos = camera.GetCenter();
-    //std::cout << "Height: " << kitty.getHeight() << std::endl;
-    //camerapos.y = kitty.getHeight();
-    //camera.SetCenter(camerapos);
     if (kitty.getHeight() <= -240+32){
         camerapos.y = kitty.getHeight();
         camera.SetCenter(camerapos);
     }
     rendertarget.SetView(camera);
+    sf::FloatRect camerarect(camerapos.x-320, camerapos.y-240, 640, 480);
     rendertarget.Draw(kitty.sprite);
     for (int i = 0; i < MAXEXPLOSIVES; i += 1){
         if (!explosive[i].exists){
             continue;}
-        explosive[i].Update( kitty.getHeight() );
+        if (explosive[i].sprite.GetPosition().y < camerarect.Top){
+            explosive[i].setArrowAtTop();
+        }else{
+            explosive[i].setArrowAtBottom();
+        }
+        explosive[i].Update( camerapos.y );
         rendertarget.Draw(explosive[i].sprite);
     }
     rendertarget.Draw(floor);
@@ -142,8 +145,10 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
     for(int i = 0; i < MAXEXPLOSIVES; i += 1){
         if (!explosive[i].exists){
             continue;}
-        rendertarget.Draw(explosive[i].arrow);
-        rendertarget.Draw(explosive[i].meters);
+        if ( !camerarect.Contains(explosive[i].sprite.GetPosition() ) ){
+            rendertarget.Draw(explosive[i].arrow);
+            rendertarget.Draw(explosive[i].meters);
+        }
     }
     rendertarget.Draw(speed);
     rendertarget.Draw(km_h);

@@ -48,18 +48,20 @@ void fff::explosive::setPosition(float x, float y){
 void fff::explosive::setArrowAtBottom(){
     arrow.SetY(400);
     meters.SetY(400);
+    arrow.FlipY(false);
 }
 
 void fff::explosive::setArrowAtTop(){
     arrow.SetY(80);
     meters.SetY(80);
+    arrow.FlipY(true);
 }
 
 void fff::explosive::Update(float y){
     char buffer[8] = {0};
     sf::Vector2f pos = sprite.GetPosition();
-    //std::cout << pos.y << std::endl;
-    snprintf(buffer, 8, "%d", (int)fabsf(y-pos.y) );
+    int m = fabsf(y) - fabsf(pos.y);
+    snprintf(buffer, 8, "%d", abs(int(PIXELSTOMETERS(m))) );
     meters.SetString(buffer);
     //sf::FloatRectr rect = meter.GetRect();
 }

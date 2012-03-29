@@ -37,7 +37,7 @@ namespace fff{
         void loadResources();
         void startEngine();
         void Run();
-        void playExplosion(sf::SoundBuffer *);
+        void playExplosion(sf::SoundBuffer *, sf::Vector2f);
         
     };
 

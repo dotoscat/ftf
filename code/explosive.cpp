@@ -80,6 +80,6 @@ int fff::explosive::Begin(cpArbiter *arb, cpSpace *space, void *pengine){
     fff::explosive *explosive = static_cast<fff::explosive *>( cpShapeGetUserData(explosivebody) );
     fff::kitty *kitty = static_cast<fff::kitty *>( cpShapeGetUserData(kittybody) );
     kitty->applyImpulse(explosive->impulse);
-    game.playExplosion(explosive->soundbuffer);
+    game.playExplosion(explosive->soundbuffer, explosive->sprite.GetPosition() );
     return 0;
 }

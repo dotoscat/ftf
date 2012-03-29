@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdio>
 #include <cfloat>
+#include <SFML/Audio.hpp>
 #include "engine.hpp"
 #include "game.hpp"
 #include "collisions.hpp"
@@ -12,7 +13,7 @@ fff::engine::engine(){
     
     cpSpaceAddCollisionHandler(space, types::explosive, types::kitty, fff::explosive::Begin, NULL, NULL, NULL, this);
     
-    cpSpaceSetGravity(space, (cpVect){0.f, 9.8f});
+    cpSpaceSetGravity(space, (cpVect){0.f, 10.f});
     cpSpaceAddBody(space, kitty.body);
     shapefloor = cpSegmentShapeNew(cpSpaceGetStaticBody(space), (cpVect){0.f, 4.f}, (cpVect){640.f, 4.f}, 4.f);
     cpSpaceAddShape(space, shapefloor);
@@ -132,6 +133,12 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
         camerapos.y = kitty.getHeight();
         camera.SetCenter(camerapos);
     }
+    
+    sf::Vector3f listenerpos = sf::Listener::GetPosition();
+    listenerpos.y = camerapos.y;
+    listenerpos.x = camerapos.x;
+    sf::Listener::SetPosition(listenerpos);
+    
     rendertarget.SetView(camera);
     sf::FloatRect camerarect(camerapos.x-320, camerapos.y-240, 640, 480);
     rendertarget.Draw(kitty.sprite);

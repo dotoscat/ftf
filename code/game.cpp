@@ -10,6 +10,7 @@ fff::_game::_game(){
     realwindow.EnableKeyRepeat(false);
     clearcolor = sf::Color(135, 206, 255);
     lostfocus = false;
+    soundexplosion.SetAttenuation(0.001);
     
     currentscene = &mainscene;
     
@@ -135,8 +136,9 @@ void fff::_game::Run(){
     }
 }
 
-void fff::_game::playExplosion(sf::SoundBuffer *soundbuffer){
+void fff::_game::playExplosion(sf::SoundBuffer *soundbuffer, sf::Vector2f position){
     soundexplosion.Stop();
+    soundexplosion.SetPosition( sf::Vector3f(position.x, position.y, 0) );
     soundexplosion.SetBuffer( *soundbuffer );
     soundexplosion.SetPitch( 1.f - (rand()%3) / 10.f );
     soundexplosion.Play();

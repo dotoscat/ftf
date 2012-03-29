@@ -1,4 +1,5 @@
 #include <string>
+#include <cstdlib>
 #include <iostream>
 #include "game.hpp"
 
@@ -70,6 +71,20 @@ void fff::_game::loadResources(){
         lua_pop(vm, 1);//next
     }
     lua_pop(vm, 1);//fonts
+    //
+    
+    //load sounds
+    lua_getglobal(vm, "sounds");
+    lua_pushnil(vm);
+    while(lua_next(vm, -2)){
+        soundbuffers[lua_tostring(vm, -2)] = new sf::SoundBuffer();
+        file = lua_tostring(vm, -1);
+        if (!soundbuffers[lua_tostring(vm, -2)]->LoadFromFile( game+file )){
+            std::cout << "Error loding sound: " << file << std::endl;}
+        lua_pop(vm, 1);//next
+    }
+    lua_pop(vm, 1);//soundbuffers
+    //
     
     engine.loadResources();
     
@@ -118,6 +133,13 @@ void fff::_game::Run(){
         realwindow.Display();
         
     }
+}
+
+void fff::_game::playExplosion(sf::SoundBuffer *soundbuffer){
+    soundexplosion.Stop();
+    soundexplosion.SetBuffer( *soundbuffer );
+    soundexplosion.SetPitch( 1.f - (rand()%3) / 10.f );
+    soundexplosion.Play();
 }
 
 fff::_game fff::game;

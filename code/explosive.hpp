@@ -1,6 +1,7 @@
 #ifndef _explosive_
 #define _explosive_
 
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <chipmunk/chipmunk.h>
 
@@ -13,6 +14,7 @@ namespace fff{
         sf::Sprite sprite;
         sf::Sprite arrow;
         sf::Text meters;
+        sf::SoundBuffer *soundbuffer;
         cpShape *shape;
         
         float impulse;

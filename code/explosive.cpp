@@ -14,6 +14,7 @@ fff::explosive::explosive(){
     meters.SetColor(sf::Color::Black);
     meters.SetCharacterSize(14);
     shape = NULL;
+    soundbuffer = NULL;
 }
 
 fff::explosive::~explosive(){
@@ -40,6 +41,10 @@ void fff::explosive::Configure(const char *object){
     sprite.SetTexture( *game.textures[ const_cast<char *>(fff::GetTextureByLua(game.vm, object)) ] );
     cpCircleShapeSetRadius(shape, fff::GetRadiusByLua(game.vm, object));
     exists = true;
+    lua_getglobal(game.vm, object);
+    lua_getfield(game.vm, -1, "sound");
+    soundbuffer = game.soundbuffers[lua_tostring(game.vm, -1)];
+    lua_pop(game.vm, 2);//sound and object
 }
 
 void fff::explosive::setPosition(float x, float y){
@@ -75,5 +80,6 @@ int fff::explosive::Begin(cpArbiter *arb, cpSpace *space, void *pengine){
     fff::explosive *explosive = static_cast<fff::explosive *>( cpShapeGetUserData(explosivebody) );
     fff::kitty *kitty = static_cast<fff::kitty *>( cpShapeGetUserData(kittybody) );
     kitty->applyImpulse(explosive->impulse);
+    game.playExplosion(explosive->soundbuffer);
     return 0;
 }

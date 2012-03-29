@@ -26,6 +26,8 @@ namespace fff{
         std::map<std::string, sf::SoundBuffer *> soundbuffers;
         std::map<std::string, sf::Font *> fonts;
         
+        sf::Sound soundexplosion;
+        
         fff::mainscene mainscene;
         fff::engine engine;
         fff::scene *currentscene;
@@ -35,6 +37,7 @@ namespace fff{
         void loadResources();
         void startEngine();
         void Run();
+        void playExplosion(sf::SoundBuffer *);
         
     };
 

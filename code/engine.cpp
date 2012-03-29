@@ -108,6 +108,7 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
         if (kitty.isFalling() && this->generateExplosiveWhileFalling() ){
             int i = this->createExplosive();
             if (i < MAXEXPLOSIVES){
+                cpSpaceAddShape(space, explosive[i].shape);
                 explosive[i].setArrowAtBottom();
                 float x = 0.f;
                 while(x <= 80 || x > 400){
@@ -175,16 +176,15 @@ int fff::engine::createExplosive(){
             if ( (rand()%101) <= lua_tonumber(game.vm, -1) ){
                 lua_pop(game.vm, 1);//appareance
                 explosive[i].Configure(lua_tostring(game.vm, -2));//-1 is table, -2 key
-                lua_pop(game.vm, 2);//table(next) and key
-                break;
+                lua_pop(game.vm, 3);//table(next), key and explosives
+                return i;
             }
             lua_pop(game.vm, 2);//apparance and next
         }
         lua_pop(game.vm, 1);//explosives
-        break;
         
     }
-    return i;
+    return MAXEXPLOSIVES;//no return a explosive index
 }
 
 bool fff::engine::generateExplosive(){

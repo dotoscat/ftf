@@ -76,10 +76,10 @@ void fff::kitty::applyImpulse(float impulse){
     cpVect vel = cpBodyGetVel(body);
     if (vel.y > 0.f){
         //falling
-        vel.y = impulse;
+        vel.y = impulse*10.f;
     }else{
         //climbing
-        vel.y += impulse;
+        vel.y += impulse*10.f;
     }
     cpBodySetVel(body, vel);
 }

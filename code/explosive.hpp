@@ -27,6 +27,8 @@ namespace fff{
         void setArrowAtTop();
         void Update(float);
         
+        static int Begin(cpArbiter *, cpSpace *, void *);
+        
     };
     
 }

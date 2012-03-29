@@ -3,9 +3,15 @@
 #include <cfloat>
 #include "engine.hpp"
 #include "game.hpp"
+#include "collisions.hpp"
 
 fff::engine::engine(){
     space = cpSpaceNew();
+    
+    using namespace fff::collisions;
+    
+    cpSpaceAddCollisionHandler(space, types::explosive, types::kitty, fff::explosive::Begin, NULL, NULL, NULL, this);
+    
     cpSpaceSetGravity(space, (cpVect){0.f, 9.8f});
     cpSpaceAddBody(space, kitty.body);
     shapefloor = cpSegmentShapeNew(cpSpaceGetStaticBody(space), (cpVect){0.f, 4.f}, (cpVect){640.f, 4.f}, 4.f);
@@ -108,12 +114,12 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
         if (kitty.isFalling() && this->generateExplosiveWhileFalling() ){
             int i = this->createExplosive();
             if (i < MAXEXPLOSIVES){
-                cpSpaceAddShape(space, explosive[i].shape);
                 explosive[i].setArrowAtBottom();
                 float x = 0.f;
                 while(x <= 80 || x > 400){
                     x = rand() % 400;}
                 explosive[i].setPosition( x, -(rand()%METERSTOPIXELS(250)) );
+                cpSpaceAddShape(space, explosive[i].shape);
             }
         }
         time = 0;

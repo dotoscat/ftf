@@ -24,6 +24,7 @@ namespace fff{
         float getVerticalSpeed();
         bool isFalling();
         bool isClimbing();
+        void applyImpulse(float);
         void Update();
          
     };

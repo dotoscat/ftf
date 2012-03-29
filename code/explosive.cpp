@@ -6,6 +6,7 @@
 #include "explosive.hpp"
 #include "auxiliar.hpp"
 #include "game.hpp"
+#include "collisions.hpp"
 
 fff::explosive::explosive(){
     exists = false;
@@ -28,6 +29,9 @@ void fff::explosive::loadResources(){
 
 void fff::explosive::prepareShape(cpSpace *space){
     shape = cpCircleShapeNew( cpSpaceGetStaticBody(space), 1.f, (cpVect){0.f, 0.f} );
+    cpShapeSetUserData(shape, this);
+    cpShapeSetCollisionType(shape, fff::collisions::types::explosive);
+    cpShapeSetSensor(shape, cpTrue);
 }
 
 void fff::explosive::Configure(const char *object){
@@ -64,4 +68,12 @@ void fff::explosive::Update(float y){
     snprintf(buffer, 8, "%d", abs(int(PIXELSTOMETERS(m))) );
     meters.SetString(buffer);
     //sf::FloatRectr rect = meter.GetRect();
+}
+
+int fff::explosive::Begin(cpArbiter *arb, cpSpace *space, void *pengine){
+    CP_ARBITER_GET_SHAPES(arb, explosivebody, kittybody);
+    fff::explosive *explosive = static_cast<fff::explosive *>( cpShapeGetUserData(explosivebody) );
+    fff::kitty *kitty = static_cast<fff::kitty *>( cpShapeGetUserData(kittybody) );
+    kitty->applyImpulse(explosive->impulse);
+    return 0;
 }

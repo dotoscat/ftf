@@ -3,9 +3,11 @@
 #include "kitty.hpp"
 #include "game.hpp"
 #include "auxiliar.hpp"
+#include "collisions.hpp"
 
 fff::kitty::kitty(){
     body = cpBodyNew(1.f, INFINITY);
+    cpBodySetUserData(body, this);
 }
 
 fff::kitty::~kitty(){
@@ -16,6 +18,8 @@ fff::kitty::~kitty(){
 void fff::kitty::Configure(){
     fff::SetOriginByLua(game.vm, sprite, "kitty");
     shape = cpCircleShapeNew(body, fff::GetRadiusByLua(game.vm, "kitty"), (cpVect){0.f, 0.f} );
+    cpShapeSetUserData(shape, this);
+    cpShapeSetCollisionType(shape, fff::collisions::types::kitty);
 }
 
 void fff::kitty::setInitialFallingSpeed(float speed){
@@ -66,6 +70,18 @@ bool fff::kitty::isClimbing(){
     if( vel.y < 0.f){
         return true;}
     return false;
+}
+
+void fff::kitty::applyImpulse(float impulse){
+    cpVect vel = cpBodyGetVel(body);
+    if (vel.y > 0.f){
+        //falling
+        vel.y = impulse;
+    }else{
+        //climbing
+        vel.y += impulse;
+    }
+    cpBodySetVel(body, vel);
 }
 
 void fff::kitty::Update(){

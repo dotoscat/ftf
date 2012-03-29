@@ -23,7 +23,7 @@ void fff::kitty::Configure(){
 }
 
 void fff::kitty::setInitialFallingSpeed(float speed){
-    cpVect vel = {0, speed*10.f};
+    cpVect vel = {0, KMH_TO_PXS(speed)};
     cpBodySetVel(body, vel);
 }
 
@@ -55,7 +55,7 @@ float fff::kitty::getHeight(){
 
 float fff::kitty::getVerticalSpeed(){
     cpVect vel = cpBodyGetVel(body);
-    return vel.y/10.f;
+    return PXS_TO_KMH(vel.y);
 }
 
 bool fff::kitty::isFalling(){
@@ -76,10 +76,10 @@ void fff::kitty::applyImpulse(float impulse){
     cpVect vel = cpBodyGetVel(body);
     if (vel.y > 0.f){
         //falling
-        vel.y = impulse*10.f;
+        vel.y = impulse;
     }else{
         //climbing
-        vel.y += impulse*10.f;
+        vel.y += impulse;
     }
     cpBodySetVel(body, vel);
 }

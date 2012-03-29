@@ -37,7 +37,7 @@ void fff::explosive::prepareShape(cpSpace *space){
 
 void fff::explosive::Configure(const char *object){
     fff::SetOriginByLua(game.vm, sprite, object);
-    impulse = fff::GetImpulseByLua(game.vm, object);
+    impulse = KMH_TO_PXS(fff::GetImpulseByLua(game.vm, object));
     sprite.SetTexture( *game.textures[ const_cast<char *>(fff::GetTextureByLua(game.vm, object)) ] );
     cpCircleShapeSetRadius(shape, fff::GetRadiusByLua(game.vm, object));
     exists = true;

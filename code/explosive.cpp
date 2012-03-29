@@ -76,10 +76,16 @@ void fff::explosive::Update(float y){
 }
 
 int fff::explosive::Begin(cpArbiter *arb, cpSpace *space, void *pengine){
-    CP_ARBITER_GET_SHAPES(arb, explosivebody, kittybody);
-    fff::explosive *explosive = static_cast<fff::explosive *>( cpShapeGetUserData(explosivebody) );
-    fff::kitty *kitty = static_cast<fff::kitty *>( cpShapeGetUserData(kittybody) );
+    CP_ARBITER_GET_SHAPES(arb, explosiveshape, kittyshape);
+    fff::explosive *explosive = static_cast<fff::explosive *>( cpShapeGetUserData(explosiveshape) );
+    fff::kitty *kitty = static_cast<fff::kitty *>( cpShapeGetUserData(kittyshape) );
     kitty->applyImpulse(explosive->impulse);
+    explosive->exists = false;
     game.playExplosion(explosive->soundbuffer, explosive->sprite.GetPosition() );
+    cpSpaceAddPostStepCallback(space, fff::explosive::postStep, explosiveshape, NULL);
     return 0;
+}
+
+void fff::explosive::postStep(cpSpace *space, void *shape, void *data){
+    cpSpaceRemoveShape(space, static_cast<cpShape *>(shape));
 }

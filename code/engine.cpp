@@ -13,7 +13,7 @@ fff::engine::engine(){
     
     cpSpaceAddCollisionHandler(space, types::explosive, types::kitty, fff::explosive::Begin, NULL, NULL, NULL, this);
     
-    cpSpaceSetGravity(space, (cpVect){0.f, 10.f});
+    cpSpaceSetGravity(space, (cpVect){0.f, METERSTOPIXELS(10.f)});
     cpSpaceAddBody(space, kitty.body);
     shapefloor = cpSegmentShapeNew(cpSpaceGetStaticBody(space), (cpVect){0.f, 4.f}, (cpVect){640.f, 4.f}, 4.f);
     cpSpaceAddShape(space, shapefloor);
@@ -129,10 +129,14 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
     //std::cout << "lua gettop: " << lua_gettop(game.vm) << std::endl;
     
     sf::Vector2f camerapos = camera.GetCenter();
-    if (kitty.getHeight() <= -240+32){
+    if (kitty.getHeight() < -240+32){
         camerapos.y = kitty.getHeight();
-        camera.SetCenter(camerapos);
+        
     }
+    else{
+        camerapos.y = -240+32;
+    }
+    camera.SetCenter(camerapos);
     
     sf::Vector3f listenerpos = sf::Listener::GetPosition();
     listenerpos.y = camerapos.y;

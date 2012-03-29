@@ -30,6 +30,7 @@ namespace fff{
         void Update(float);
         
         static int Begin(cpArbiter *, cpSpace *, void *);
+        static void postStep(cpSpace *, void *, void *);
         
     };
     

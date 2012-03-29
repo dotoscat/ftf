@@ -43,7 +43,7 @@ namespace fff{
             int createExplosive();
             bool generateExplosive();
             bool generateExplosiveWhileFalling();
-        
+            
     };
     
 }

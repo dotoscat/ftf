@@ -117,11 +117,22 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
                 float x = 0.f;
                 while(x <= 80 || x > 400){
                     x = rand() % 400;}
-                explosive[i].setPosition( x, -(rand()%METERSTOPIXELS(250)) );
+                float predictiony = kitty.forecastYPositionTo( 1.f+(random()%3) ) ;
+                explosive[i].setPosition( x, predictiony );
                 cpSpaceAddShape(space, explosive[i].shape);
             }
         }
         else if (kitty.isClimbing() && this->generateExplosiveWhileClimbing() ){
+            int i = this->createExplosive();
+            if (i < MAXEXPLOSIVES){
+                float x = 0.f;
+                while(x <= 80 || x > 400){
+                    x = rand() % 400;}
+                float predictiony = kitty.forecastYPositionTo( 1.f+(random()%3) ) ;
+                //std::cout << "Prediction climbing: " << predictiony << "; kitty height: " << kitty.getHeight() << std::endl;
+                explosive[i].setPosition( x, predictiony );
+                cpSpaceAddShape(space, explosive[i].shape);
+            }
         }
         
         time = 0;

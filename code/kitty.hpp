@@ -11,6 +11,9 @@ namespace fff{
         cpShape *shape;
         sf::Sprite sprite;
         
+        cpSpace *forecastspace;
+        cpBody forecastbody;
+        
         kitty();
         ~kitty();
         void Configure();
@@ -22,10 +25,12 @@ namespace fff{
         void stopMovingRight();
         float getHeight();
         float getVerticalSpeed();
+        float getVerticalSpeedPxls();
         bool isFalling();
         bool isClimbing();
         void applyImpulse(float);
         void Update();
+        float forecastYPositionTo(float);
          
     };
     

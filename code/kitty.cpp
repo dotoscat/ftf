@@ -8,11 +8,18 @@
 fff::kitty::kitty(){
     body = cpBodyNew(1.f, INFINITY);
     cpBodySetUserData(body, this);
+    
+    forecastspace = cpSpaceNew();
+    cpBodyInit(&forecastbody, 1.f, INFINITY);
+    cpSpaceSetGravity(forecastspace, (cpVect){0.f, METERSTOPIXELS(10.f)} );
+    cpSpaceAddBody(forecastspace, &forecastbody);
+    
 }
 
 fff::kitty::~kitty(){
     cpBodyFree(body);
     cpShapeFree(shape);
+    cpSpaceFree(forecastspace);
 }
 
 void fff::kitty::Configure(){
@@ -58,6 +65,11 @@ float fff::kitty::getVerticalSpeed(){
     return PXS_TO_KMH(vel.y);
 }
 
+float fff::kitty::getVerticalSpeedPxls(){
+    cpVect vel = cpBodyGetVel(body);
+    return vel.y;
+}
+
 bool fff::kitty::isFalling(){
     cpVect vel = cpBodyGetVel(body);
     if( vel.y > 0.f){
@@ -87,4 +99,11 @@ void fff::kitty::applyImpulse(float impulse){
 void fff::kitty::Update(){
     cpVect pos = cpBodyGetPos(body);
     sprite.SetPosition(pos.x, pos.y);
+}
+
+float fff::kitty::forecastYPositionTo(float time){
+    forecastbody = *body;
+    cpSpaceStep(forecastspace, time);
+    cpVect pos = cpBodyGetPos(&forecastbody);
+    return pos.y;
 }

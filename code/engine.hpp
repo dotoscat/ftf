@@ -18,7 +18,7 @@ namespace fff{
         cpSpace *space;
         sf::View camera;
         sf::Sprite floor;
-        cpShape *shapefloor, *shapeleftlimit, *shaperightlimit;
+        cpShape *shapeleftlimit, *shaperightlimit;
         fff::clock engineclock;
         sf::Text clock;
         sf::Text speed;

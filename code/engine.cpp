@@ -8,15 +8,15 @@
 
 fff::engine::engine(){
     space = cpSpaceNew();
+    cpSpaceSetIterations(space, 100);
+    cpSpaceSetGravity(space, (cpVect){0.f, METERSTOPIXELS(10.f)});
     
     using namespace fff::collisions;
     
     cpSpaceAddCollisionHandler(space, types::explosive, types::kitty, fff::explosive::Begin, NULL, NULL, NULL, this);
     
-    cpSpaceSetGravity(space, (cpVect){0.f, METERSTOPIXELS(10.f)});
     cpSpaceAddBody(space, kitty.body);
-    shapefloor = cpSegmentShapeNew(cpSpaceGetStaticBody(space), (cpVect){0.f, 4.f}, (cpVect){640.f, 4.f}, 4.f);
-    cpSpaceAddShape(space, shapefloor);
+    
     shapeleftlimit = cpSegmentShapeNew(cpSpaceGetStaticBody(space), (cpVect){-4.f, 0.f}, (cpVect){-4.f, -FLT_MAX}, 4.f);
     cpSpaceAddShape(space, shapeleftlimit);
     shaperightlimit = cpSegmentShapeNew(cpSpaceGetStaticBody(space), (cpVect){640+4.f, 0.f}, (cpVect){640+4.f, -FLT_MAX}, 4.f);
@@ -39,7 +39,6 @@ fff::engine::engine(){
 }
 
 fff::engine::~engine(){
-    cpShapeFree(shapefloor);
     cpShapeFree(shapeleftlimit);
     cpShapeFree(shaperightlimit);
     cpSpaceFree(space);

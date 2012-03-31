@@ -161,13 +161,36 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
     for (int i = 0; i < MAXEXPLOSIVES; i += 1){
         if (!explosive[i].exists){
             continue;}
-        if (explosive[i].sprite.GetPosition().y < camerarect.Top){
-            explosive[i].setArrowAtTop();
-        }else{
-            explosive[i].setArrowAtBottom();
+        
+        if (!explosive[i].isExploding()){
+            
+            explosive[i].acumlifespan += currenttime;
+            if (explosive[i].isOver() ){
+                explosive[i].exists = false;
+                cpSpaceRemoveShape(space, explosive[i].shape);
+                continue;
+            }
+            
+            if (explosive[i].sprite.GetPosition().y < camerarect.Top){
+                explosive[i].setArrowAtTop();
+            }else{
+                explosive[i].setArrowAtBottom();
+            }
+            explosive[i].Update( camerapos.y );
+            rendertarget.Draw(explosive[i].sprite);
+            continue;
         }
-        explosive[i].Update( camerapos.y );
-        rendertarget.Draw(explosive[i].sprite);
+        //if is exploding....
+        
+        explosive[i].timeexploding += currenttime;
+        
+        if (explosive[i].isExploded() ){
+            explosive[i].exists = false;
+            continue;
+        }
+        
+        rendertarget.Draw(explosive[i].explosion);
+        
     }
     rendertarget.Draw(floor);
     //draw hud

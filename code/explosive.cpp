@@ -15,6 +15,7 @@ fff::explosive::explosive(){
     meters.SetCharacterSize(14);
     shape = NULL;
     soundbuffer = NULL;
+    lifespan = 5000;//5 secs
 }
 
 fff::explosive::~explosive(){
@@ -26,6 +27,9 @@ fff::explosive::~explosive(){
 void fff::explosive::loadResources(){
     fff::SetOriginByLua(game.vm, arrow, "arrow");
     arrow.SetTexture(*game.textures["arrow"]);
+    sf::Texture &explosiontexture = *game.textures["explosion"];
+    explosion.SetOrigin( explosiontexture.GetWidth()/2, explosiontexture.GetHeight()/2 );
+    explosion.SetTexture( explosiontexture );
 }
 
 void fff::explosive::prepareShape(cpSpace *space){
@@ -45,11 +49,14 @@ void fff::explosive::Configure(const char *object){
     lua_getfield(game.vm, -1, "sound");
     soundbuffer = game.soundbuffers[lua_tostring(game.vm, -1)];
     lua_pop(game.vm, 2);//sound and object
+    status = normal;
+    acumlifespan = 0;
 }
 
 void fff::explosive::setPosition(float x, float y){
     cpCircleShapeSetOffset(shape, (cpVect){x, y});
     sprite.SetPosition(x, y);
+    explosion.SetPosition(x, y);
     arrow.SetX(x);
     meters.SetX(x);
 }
@@ -80,7 +87,7 @@ int fff::explosive::Begin(cpArbiter *arb, cpSpace *space, void *pengine){
     fff::explosive *explosive = static_cast<fff::explosive *>( cpShapeGetUserData(explosiveshape) );
     fff::kitty *kitty = static_cast<fff::kitty *>( cpShapeGetUserData(kittyshape) );
     kitty->applyImpulse(explosive->impulse);
-    explosive->exists = false;
+    explosive->setExploding();
     game.playExplosion(explosive->soundbuffer, explosive->sprite.GetPosition() );
     cpSpaceAddPostStepCallback(space, fff::explosive::postStep, explosiveshape, NULL);
     return 0;
@@ -88,4 +95,27 @@ int fff::explosive::Begin(cpArbiter *arb, cpSpace *space, void *pengine){
 
 void fff::explosive::postStep(cpSpace *space, void *shape, void *data){
     cpSpaceRemoveShape(space, static_cast<cpShape *>(shape));
+}
+
+void fff::explosive::setExploding(){
+    status = exploding;
+    timeexploding = 0;
+}
+
+bool fff::explosive::isExploding(){
+    if (status == exploding){
+        return true;}
+    return false;
+}
+
+bool fff::explosive::isExploded(){
+    if (timeexploding > 250){
+        return true;}
+    return false;
+}
+
+bool fff::explosive::isOver(){
+    if (acumlifespan > lifespan){
+        return true;}
+    return false;
 }

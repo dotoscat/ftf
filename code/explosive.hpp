@@ -9,8 +9,18 @@ namespace fff{
     
     struct explosive{
         
+        enum _status{
+            normal,
+            exploding
+        }status;
+        
+        sf::Uint32 timeexploding;
+        sf::Uint32 lifespan;
+        sf::Uint32 acumlifespan;
+        
         bool exists;
         
+        sf::Sprite explosion;
         sf::Sprite sprite;
         sf::Sprite arrow;
         sf::Text meters;
@@ -28,6 +38,10 @@ namespace fff{
         void setArrowAtBottom();
         void setArrowAtTop();
         void Update(float);
+        void setExploding();
+        bool isExploding();
+        bool isExploded();
+        bool isOver();
         
         static int Begin(cpArbiter *, cpSpace *, void *);
         static void postStep(cpSpace *, void *, void *);

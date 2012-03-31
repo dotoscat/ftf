@@ -10,6 +10,7 @@ fff::kitty::kitty(){
     cpBodySetUserData(body, this);
     
     forecastspace = cpSpaceNew();
+    cpSpaceSetIterations(forecastspace, 100);
     cpBodyInit(&forecastbody, 1.f, INFINITY);
     cpSpaceSetGravity(forecastspace, (cpVect){0.f, METERSTOPIXELS(10.f)} );
     cpSpaceAddBody(forecastspace, &forecastbody);

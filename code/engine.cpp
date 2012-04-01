@@ -7,20 +7,18 @@
 #include "collisions.hpp"
 
 fff::engine::engine(){
-    space = cpSpaceNew();
-    cpSpaceSetIterations(space, 100);
-    cpSpaceSetGravity(space, (cpVect){0.f, METERSTOPIXELS(10.f)});
+    world = new b2World(b2Vec2(0.f, 10.f));
     
     using namespace fff::collisions;
     
-    cpSpaceAddCollisionHandler(space, types::explosive, types::kitty, fff::explosive::Begin, NULL, NULL, NULL, this);
+    //cpSpaceAddCollisionHandler(space, types::explosive, types::kitty, fff::explosive::Begin, NULL, NULL, NULL, this);
     
-    cpSpaceAddBody(space, kitty.body);
+    //cpSpaceAddBody(space, kitty.body);
     
-    shapeleftlimit = cpSegmentShapeNew(cpSpaceGetStaticBody(space), (cpVect){-4.f, 0.f}, (cpVect){-4.f, -FLT_MAX}, 4.f);
-    cpSpaceAddShape(space, shapeleftlimit);
-    shaperightlimit = cpSegmentShapeNew(cpSpaceGetStaticBody(space), (cpVect){640+4.f, 0.f}, (cpVect){640+4.f, -FLT_MAX}, 4.f);
-    cpSpaceAddShape(space, shaperightlimit);
+    //shapeleftlimit = cpSegmentShapeNew(cpSpaceGetStaticBody(space), (cpVect){-4.f, 0.f}, (cpVect){-4.f, -FLT_MAX}, 4.f);
+    //cpSpaceAddShape(space, shapeleftlimit);
+    //shaperightlimit = cpSegmentShapeNew(cpSpaceGetStaticBody(space), (cpVect){640+4.f, 0.f}, (cpVect){640+4.f, -FLT_MAX}, 4.f);
+    //cpSpaceAddShape(space, shaperightlimit);
     floor.SetPosition(0, 0);
     camera.SetCenter(320, 240);
     camera.SetSize(640, 480);
@@ -39,9 +37,7 @@ fff::engine::engine(){
 }
 
 fff::engine::~engine(){
-    cpShapeFree(shapeleftlimit);
-    cpShapeFree(shaperightlimit);
-    cpSpaceFree(space);
+    delete world;
 }
 
 void fff::engine::Reset(){
@@ -58,12 +54,12 @@ void fff::engine::Reset(){
 
 void fff::engine::loadResources(){
     kitty.Configure();
-    cpSpaceAddShape(space, kitty.shape);
+    //cpSpaceAddShape(space, kitty.shape);
     floor.SetTexture(*game.textures["floor"]);
     kitty.sprite.SetTexture(*game.textures["kitty"]);
     kitty.Update();
     for (int i = 0; i < MAXEXPLOSIVES; i += 1){
-        explosive[i].prepareShape(space);
+        //explosive[i].prepareShape(space);
         explosive[i].loadResources();
     }
 }
@@ -93,7 +89,7 @@ void fff::engine::Event(sf::Event &event){
 
 void fff::engine::Run(sf::RenderTarget &rendertarget){
     sf::Uint32 currenttime = game.realwindow.GetFrameTime();
-    cpSpaceStep(space, currenttime/1000.f);
+    world->Step(currenttime/1000.f, 10, 10);
     
     char buffer[8] = {0};
     
@@ -119,7 +115,7 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
                     x = rand() % 400;}
                 float predictiony = kitty.forecastYPositionTo( 1.f+(random()%3) ) ;
                 explosive[i].setPosition( x, predictiony );
-                cpSpaceAddShape(space, explosive[i].shape);
+                //cpSpaceAddShape(space, explosive[i].shape);
             }
         }
         else if (kitty.isClimbing() && this->generateExplosiveWhileClimbing() ){
@@ -131,7 +127,7 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
                 float predictiony = kitty.forecastYPositionTo( 1.f+(random()%3) ) ;
                 //std::cout << "Prediction climbing: " << predictiony << "; kitty height: " << kitty.getHeight() << std::endl;
                 explosive[i].setPosition( x, predictiony );
-                cpSpaceAddShape(space, explosive[i].shape);
+                //cpSpaceAddShape(space, explosive[i].shape);
             }
         }
         
@@ -167,7 +163,7 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
             explosive[i].acumlifespan += currenttime;
             if (explosive[i].isOver() ){
                 explosive[i].exists = false;
-                cpSpaceRemoveShape(space, explosive[i].shape);
+                //cpSpaceRemoveShape(space, explosive[i].shape);
                 continue;
             }
             

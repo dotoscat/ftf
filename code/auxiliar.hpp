@@ -3,7 +3,6 @@
 
 #include <lua5.1/lua.hpp>
 #include <SFML/Graphics.hpp>
-//#include <chipmunk/chipmunk.h>
 
 namespace fff{
     

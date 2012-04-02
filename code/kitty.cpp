@@ -37,6 +37,7 @@ void fff::kitty::setInitialFallingSpeed(float speed){
 
 void fff::kitty::setPosition(float x, float y){
     cpVect pos = {x, y};
+    lastpos = pos;
     cpBodySetPos(body, pos);
 }
 
@@ -99,6 +100,7 @@ void fff::kitty::applyImpulse(float impulse){
 
 void fff::kitty::Update(){
     cpVect pos = cpBodyGetPos(body);
+    lastpos = pos;
     sprite.SetPosition(pos.x, pos.y);
 }
 
@@ -107,4 +109,8 @@ float fff::kitty::forecastYPositionTo(float time){
     cpSpaceStep(forecastspace, time);
     cpVect pos = cpBodyGetPos(&forecastbody);
     return pos.y;
+}
+
+cpVect fff::kitty::getCurrentPos(){
+    return cpBodyGetPos(body);
 }

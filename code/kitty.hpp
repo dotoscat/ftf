@@ -14,6 +14,8 @@ namespace fff{
         cpSpace *forecastspace;
         cpBody forecastbody;
         
+        cpVect lastpos;
+        
         kitty();
         ~kitty();
         void Configure();
@@ -31,6 +33,7 @@ namespace fff{
         void applyImpulse(float);
         void Update();
         float forecastYPositionTo(float);
+        cpVect getCurrentPos();
          
     };
     

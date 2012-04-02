@@ -1,7 +1,7 @@
 #ifndef _engine_
 #define _engine_
 
-#include <Box2D/Box2D.h>
+#include <chipmunk/chipmunk.h>
 #include "scene.hpp"
 #include "kitty.hpp"
 #include "clock.hpp"
@@ -15,7 +15,7 @@
 namespace fff{
     
     class engine: public fff::scene{
-        b2World *world;
+        cpSpace *space;
         sf::View camera;
         sf::Sprite floor;
         cpShape *shapeleftlimit, *shaperightlimit;

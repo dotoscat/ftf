@@ -6,11 +6,12 @@
 #include "kitty.hpp"
 #include "clock.hpp"
 #include "explosive.hpp"
+#include "engine_menu.hpp"
 
 #define PIXELSTOMETERS(x) x/100.f
 #define METERSTOPIXELS(x) x*100.f
 
-#define MAXEXPLOSIVES 2
+#define MAXEXPLOSIVES 3
 
 namespace fff{
     
@@ -31,6 +32,13 @@ namespace fff{
         fff::kitty kitty;
         fff::explosive explosive[MAXEXPLOSIVES];
         
+        enum _status{
+            running,
+            pause,
+        }status;
+        
+        engine_menu menu;
+        
         public:
             engine();
             ~engine();
@@ -38,6 +46,7 @@ namespace fff{
             void loadResources();
             void Event(sf::Event &);
             void Run(sf::RenderTarget &);
+            void Continue();
         
         protected:
             int createExplosive();

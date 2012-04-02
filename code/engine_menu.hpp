@@ -11,9 +11,11 @@ namespace fff{
         sf::Text selection[2];
         int iselection;
         
-        engine_menu();
-        void Event(sf::Event &);
-        void Run(sf::RenderTarget &);
+        public:
+        
+            engine_menu();
+            void Event(sf::Event &);
+            void Run(sf::RenderTarget &);
         
     };
     

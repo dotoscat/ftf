@@ -96,6 +96,14 @@ void fff::_game::startEngine(){
     engine.Reset();
 }
 
+void fff::_game::returnToMainScene(){
+    currentscene = &mainscene;
+}
+
+void fff::_game::continueEngine(){
+    engine.Continue();
+}
+
 void fff::_game::Run(){
     sf::Event event;
     while(realwindow.IsOpened()){

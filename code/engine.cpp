@@ -54,6 +54,14 @@ void fff::engine::Reset(){
     lua_pop(game.vm, 1);//startvel
     lua_pop(game.vm, 1);//engine
     engineclock.Reset();
+    status = running;
+    for (int i = 0; i < MAXEXPLOSIVES; i += 1){
+        if (!explosive[i].exists){
+            continue;
+        }
+        explosive[i].exists = false;
+        cpSpaceRemoveShape(space, explosive[i].shape);
+    }
 }
 
 void fff::engine::loadResources(){
@@ -69,159 +77,227 @@ void fff::engine::loadResources(){
 }
 
 void fff::engine::Event(sf::Event &event){
-    if (event.Type == sf::Event::KeyPressed){
-        switch(event.Key.Code){
-            case sf::Keyboard::Left:
-                kitty.moveLeft();
-            break;
-            case sf::Keyboard::Right:
-                kitty.moveRight();
-            break;
-        }
-    }else if(event.Type == sf::Event::KeyReleased){
-        switch(event.Key.Code){
-            case sf::Keyboard::Left:
-                kitty.stopMovingLeft();
-            break;
-            case sf::Keyboard::Right:
-                kitty.stopMovingRight();
-            break;
-        }
+    switch (status){
+        case running:
+            if (event.Type == sf::Event::KeyPressed){
+                switch(event.Key.Code){
+                    case sf::Keyboard::Left:
+                        kitty.moveLeft();
+                    break;
+                    case sf::Keyboard::Right:
+                        kitty.moveRight();
+                    break;
+                    case sf::Keyboard::Return:
+                        status = pause;
+                    break;
+                }
+            }else if(event.Type == sf::Event::KeyReleased){
+                switch(event.Key.Code){
+                    case sf::Keyboard::Left:
+                        kitty.stopMovingLeft();
+                    break;
+                    case sf::Keyboard::Right:
+                        kitty.stopMovingRight();
+                    break;
+                }
+            }
+        break;
+        case pause:
+            if (event.Type == sf::Event::KeyPressed){
+                switch(event.Key.Code){
+                    case sf::Keyboard::Left:
+                        kitty.moveLeft();
+                    break;
+                    case sf::Keyboard::Right:
+                        kitty.moveRight();
+                    break;
+                }
+            }else if(event.Type == sf::Event::KeyReleased){
+                switch(event.Key.Code){
+                    case sf::Keyboard::Left:
+                        kitty.stopMovingLeft();
+                    break;
+                    case sf::Keyboard::Right:
+                        kitty.stopMovingRight();
+                    break;
+                }
+            }
+            menu.Event(event);
+        break;
     }
     
 }
 
 void fff::engine::Run(sf::RenderTarget &rendertarget){
-    sf::Uint32 currenttime = game.realwindow.GetFrameTime();
-    cpSpaceStep(space, currenttime/1000.f);
-    
-    //avoid "tunneling"
-    cpSegmentQueryInfo info;
-    for (int i = 0; i < MAXEXPLOSIVES; i += 1){
-        if ( explosive[i].isExploding() || !cpShapeSegmentQuery(explosive[i].shape, kitty.lastpos, kitty.getCurrentPos(), &info) ){
-            continue;}
-        kitty.applyImpulse(explosive[i].impulse);
-        explosive[i].setExploding();
-        game.playExplosion(explosive[i].soundbuffer, explosive[i].sprite.GetPosition() );
-        cpSpaceRemoveShape(space, explosive[i].shape);
+    sf::FloatRect camerarect;
+    sf::Vector3f listenerpos;
+    sf::Vector2f camerapos;
+    char buffer[8] = {0};
+    sf::Uint32 currenttime;
+    switch(status){
+        case running:
+            currenttime = game.realwindow.GetFrameTime();
+            cpSpaceStep(space, currenttime/1000.f);
+            
+            //avoid "tunneling"
+            cpSegmentQueryInfo info;
+            for (int i = 0; i < MAXEXPLOSIVES; i += 1){
+                if ( explosive[i].isExploding() || !cpShapeSegmentQuery(explosive[i].shape, kitty.lastpos, kitty.getCurrentPos(), &info) ){
+                    continue;}
+                kitty.applyImpulse(explosive[i].impulse);
+                explosive[i].setExploding();
+                game.playExplosion(explosive[i].soundbuffer, explosive[i].sprite.GetPosition() );
+                cpSpaceRemoveShape(space, explosive[i].shape);
+                break;
+            }
+            //---
+                        
+            snprintf(buffer, 8, "%g", kitty.getVerticalSpeed() );
+            speed.SetString(buffer);
+            
+            snprintf(buffer, 8, "%g", PIXELSTOMETERS(-kitty.getHeight()) );
+            height.SetString(buffer);
+            
+            time += currenttime;
+            engineclock.Update(currenttime);
+            clock.SetString( engineclock.getString() );
+            
+            kitty.Update();
+            
+            if ( this->generateExplosive() ){
+                
+                if (kitty.isFalling() && this->generateExplosiveWhileFalling() ){
+                    int i = this->createExplosive();
+                    if (i < MAXEXPLOSIVES){
+                        float x = 0.f;
+                        while(x <= 80 || x > 400){
+                            x = rand() % 400;}
+                        float predictiony = kitty.forecastYPositionTo( 1.f+(random()%3) ) ;
+                        explosive[i].setPosition( x, predictiony );
+                        cpSpaceAddShape(space, explosive[i].shape);
+                    }
+                }
+                else if (kitty.isClimbing() && this->generateExplosiveWhileClimbing() ){
+                    int i = this->createExplosive();
+                    if (i < MAXEXPLOSIVES){
+                        float x = 0.f;
+                        while(x <= 80 || x > 400){
+                            x = rand() % 400;}
+                        float predictiony = kitty.forecastYPositionTo( 1.f+(random()%3) ) ;
+                        //std::cout << "Prediction climbing: " << predictiony << "; kitty height: " << kitty.getHeight() << std::endl;
+                        explosive[i].setPosition( x, predictiony );
+                        cpSpaceAddShape(space, explosive[i].shape);
+                    }
+                }
+                
+                time = 0;
+            }
+            
+            //std::cout << "lua gettop: " << lua_gettop(game.vm) << std::endl;
+            
+            camerapos = camera.GetCenter();
+            if (kitty.getHeight() < -240+32){
+                camerapos.y = kitty.getHeight();
+                
+            }
+            else{
+                camerapos.y = -240+32;
+            }
+            camera.SetCenter(camerapos);
+            
+            listenerpos = sf::Listener::GetPosition();
+            listenerpos.y = camerapos.y;
+            listenerpos.x = camerapos.x;
+            sf::Listener::SetPosition(listenerpos);
+            
+            rendertarget.SetView(camera);
+            camerarect.Left = camerapos.x-320;
+            camerarect.Top = camerapos.y-240;
+            camerarect.Width = 640;
+            camerarect.Height = 480;
+
+            rendertarget.Draw(kitty.sprite);
+            for (int i = 0; i < MAXEXPLOSIVES; i += 1){
+                if (!explosive[i].exists){
+                    continue;}
+                
+                if (!explosive[i].isExploding()){
+                    
+                    explosive[i].acumlifespan += currenttime;
+                    if (explosive[i].isOver() ){
+                        explosive[i].exists = false;
+                        cpSpaceRemoveShape(space, explosive[i].shape);
+                        continue;
+                    }
+                    
+                    if (explosive[i].sprite.GetPosition().y < camerarect.Top){
+                        explosive[i].setArrowAtTop();
+                    }else{
+                        explosive[i].setArrowAtBottom();
+                    }
+                    explosive[i].Update( camerapos.y );
+                    rendertarget.Draw(explosive[i].sprite);
+                    continue;
+                }
+                //if is exploding....
+                
+                explosive[i].timeexploding += currenttime;
+                
+                if (explosive[i].isExploded() ){
+                    explosive[i].exists = false;
+                    continue;
+                }
+                
+                rendertarget.Draw(explosive[i].explosion);
+                
+            }
+            rendertarget.Draw(floor);
+            //draw hud
+            rendertarget.SetView( rendertarget.GetDefaultView() );
+            for(int i = 0; i < MAXEXPLOSIVES; i += 1){
+                if (!explosive[i].exists){
+                    continue;}
+                if ( !camerarect.Contains(explosive[i].sprite.GetPosition() ) && !explosive[i].isExploding() ){
+                    rendertarget.Draw(explosive[i].arrow);
+                    rendertarget.Draw(explosive[i].meters);
+                }
+            }
+            rendertarget.Draw(speed);
+            rendertarget.Draw(km_h);
+            rendertarget.Draw(height);
+            rendertarget.Draw(meters);
+            rendertarget.Draw(clock);
+            //
+        break;
+        case pause:
+            //rendertarget.Draw(kitty.sprite);
+            //for (int i = 0; i < MAXEXPLOSIVES; i += 1){
+            //    rendertarget.Draw(explosive[i].sprite);
+            //}
+            //rendertarget.Draw(floor);
+            //draw hud
+            rendertarget.SetView( rendertarget.GetDefaultView() );
+            for(int i = 0; i < MAXEXPLOSIVES; i += 1){
+                if (!explosive[i].exists){
+                    continue;}
+                if ( !camerarect.Contains(explosive[i].sprite.GetPosition() ) && !explosive[i].isExploding() ){
+                    rendertarget.Draw(explosive[i].arrow);
+                    rendertarget.Draw(explosive[i].meters);
+                }
+            }
+            rendertarget.Draw(speed);
+            rendertarget.Draw(km_h);
+            rendertarget.Draw(height);
+            rendertarget.Draw(meters);
+            rendertarget.Draw(clock);
+            menu.Run(rendertarget);
+            //
         break;
     }
-    //---
-    
-    char buffer[8] = {0};
-    
-    snprintf(buffer, 8, "%g", kitty.getVerticalSpeed() );
-    speed.SetString(buffer);
-    
-    snprintf(buffer, 8, "%g", PIXELSTOMETERS(-kitty.getHeight()) );
-    height.SetString(buffer);
-    
-    time += currenttime;
-    engineclock.Update(currenttime);
-    clock.SetString( engineclock.getString() );
-    
-    kitty.Update();
-    
-    if ( this->generateExplosive() ){
-        
-        if (kitty.isFalling() && this->generateExplosiveWhileFalling() ){
-            int i = this->createExplosive();
-            if (i < MAXEXPLOSIVES){
-                float x = 0.f;
-                while(x <= 80 || x > 400){
-                    x = rand() % 400;}
-                float predictiony = kitty.forecastYPositionTo( 1.f+(random()%3) ) ;
-                explosive[i].setPosition( x, predictiony );
-                cpSpaceAddShape(space, explosive[i].shape);
-            }
-        }
-        else if (kitty.isClimbing() && this->generateExplosiveWhileClimbing() ){
-            int i = this->createExplosive();
-            if (i < MAXEXPLOSIVES){
-                float x = 0.f;
-                while(x <= 80 || x > 400){
-                    x = rand() % 400;}
-                float predictiony = kitty.forecastYPositionTo( 1.f+(random()%3) ) ;
-                //std::cout << "Prediction climbing: " << predictiony << "; kitty height: " << kitty.getHeight() << std::endl;
-                explosive[i].setPosition( x, predictiony );
-                cpSpaceAddShape(space, explosive[i].shape);
-            }
-        }
-        
-        time = 0;
-    }
-    
-    //std::cout << "lua gettop: " << lua_gettop(game.vm) << std::endl;
-    
-    sf::Vector2f camerapos = camera.GetCenter();
-    if (kitty.getHeight() < -240+32){
-        camerapos.y = kitty.getHeight();
-        
-    }
-    else{
-        camerapos.y = -240+32;
-    }
-    camera.SetCenter(camerapos);
-    
-    sf::Vector3f listenerpos = sf::Listener::GetPosition();
-    listenerpos.y = camerapos.y;
-    listenerpos.x = camerapos.x;
-    sf::Listener::SetPosition(listenerpos);
-    
-    rendertarget.SetView(camera);
-    sf::FloatRect camerarect(camerapos.x-320, camerapos.y-240, 640, 480);
-    rendertarget.Draw(kitty.sprite);
-    for (int i = 0; i < MAXEXPLOSIVES; i += 1){
-        if (!explosive[i].exists){
-            continue;}
-        
-        if (!explosive[i].isExploding()){
-            
-            explosive[i].acumlifespan += currenttime;
-            if (explosive[i].isOver() ){
-                explosive[i].exists = false;
-                cpSpaceRemoveShape(space, explosive[i].shape);
-                continue;
-            }
-            
-            if (explosive[i].sprite.GetPosition().y < camerarect.Top){
-                explosive[i].setArrowAtTop();
-            }else{
-                explosive[i].setArrowAtBottom();
-            }
-            explosive[i].Update( camerapos.y );
-            rendertarget.Draw(explosive[i].sprite);
-            continue;
-        }
-        //if is exploding....
-        
-        explosive[i].timeexploding += currenttime;
-        
-        if (explosive[i].isExploded() ){
-            explosive[i].exists = false;
-            continue;
-        }
-        
-        rendertarget.Draw(explosive[i].explosion);
-        
-    }
-    rendertarget.Draw(floor);
-    //draw hud
-    rendertarget.SetView( rendertarget.GetDefaultView() );
-    for(int i = 0; i < MAXEXPLOSIVES; i += 1){
-        if (!explosive[i].exists){
-            continue;}
-        if ( !camerarect.Contains(explosive[i].sprite.GetPosition() ) && !explosive[i].isExploding() ){
-            rendertarget.Draw(explosive[i].arrow);
-            rendertarget.Draw(explosive[i].meters);
-        }
-    }
-    rendertarget.Draw(speed);
-    rendertarget.Draw(km_h);
-    rendertarget.Draw(height);
-    rendertarget.Draw(meters);
-    rendertarget.Draw(clock);
-    //
+}
+
+void fff::engine::Continue(){
+    status = running;
 }
 
 int fff::engine::createExplosive(){

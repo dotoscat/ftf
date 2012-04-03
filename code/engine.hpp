@@ -53,6 +53,7 @@ namespace fff{
             bool generateExplosive();
             bool generateExplosiveWhileFalling();
             bool generateExplosiveWhileClimbing();
+            void drawHUD();
             
     };
     

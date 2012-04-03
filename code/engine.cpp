@@ -258,36 +258,12 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
             rendertarget.Draw(floor);
             //draw hud
             rendertarget.SetView( rendertarget.GetDefaultView() );
-            for(int i = 0; i < MAXEXPLOSIVES; i += 1){
-                if (!explosive[i].exists){
-                    continue;}
-                if ( !camerarect.Contains(explosive[i].sprite.GetPosition() ) && !explosive[i].isExploding() ){
-                    rendertarget.Draw(explosive[i].signal);
-                    rendertarget.Draw(explosive[i].meters);
-                }
-            }
-            rendertarget.Draw(speed);
-            rendertarget.Draw(km_h);
-            rendertarget.Draw(height);
-            rendertarget.Draw(meters);
-            rendertarget.Draw(clock);
+            this->drawHUD();
             //
         break;
         case pause:
             rendertarget.SetView( rendertarget.GetDefaultView() );
-            for(int i = 0; i < MAXEXPLOSIVES; i += 1){
-                if (!explosive[i].exists){
-                    continue;}
-                if ( !camerarect.Contains(explosive[i].sprite.GetPosition() ) && !explosive[i].isExploding() ){
-                    rendertarget.Draw(explosive[i].signal);
-                    rendertarget.Draw(explosive[i].meters);
-                }
-            }
-            rendertarget.Draw(speed);
-            rendertarget.Draw(km_h);
-            rendertarget.Draw(height);
-            rendertarget.Draw(meters);
-            rendertarget.Draw(clock);
+            this->drawHUD();
             menu.Run(rendertarget);
             //
         break;
@@ -354,4 +330,20 @@ bool fff::engine::generateExplosiveWhileClimbing(){
         generate = true;}
     lua_pop(game.vm, 2);//explosiveclimbing and engine
     return generate;
+}
+
+void fff::engine::drawHUD(){
+    for(int i = 0; i < MAXEXPLOSIVES; i += 1){
+        if (!explosive[i].exists){
+            continue;}
+        if ( !camerarect.Contains(explosive[i].sprite.GetPosition() ) && !explosive[i].isExploding() ){
+            rendertarget.Draw(explosive[i].signal);
+            rendertarget.Draw(explosive[i].meters);
+        }
+    }
+    rendertarget.Draw(speed);
+    rendertarget.Draw(km_h);
+    rendertarget.Draw(height);
+    rendertarget.Draw(meters);
+    rendertarget.Draw(clock);
 }

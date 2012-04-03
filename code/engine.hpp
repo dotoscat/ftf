@@ -53,7 +53,7 @@ namespace fff{
             bool generateExplosive();
             bool generateExplosiveWhileFalling();
             bool generateExplosiveWhileClimbing();
-            void drawHUD();
+            void drawHUD(sf::RenderTarget &, sf::FloatRect &);
             
     };
     

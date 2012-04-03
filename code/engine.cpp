@@ -258,12 +258,12 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
             rendertarget.Draw(floor);
             //draw hud
             rendertarget.SetView( rendertarget.GetDefaultView() );
-            this->drawHUD();
+            this->drawHUD(rendertarget, camerarect);
             //
         break;
         case pause:
             rendertarget.SetView( rendertarget.GetDefaultView() );
-            this->drawHUD();
+            this->drawHUD(rendertarget, camerarect);
             menu.Run(rendertarget);
             //
         break;
@@ -332,7 +332,7 @@ bool fff::engine::generateExplosiveWhileClimbing(){
     return generate;
 }
 
-void fff::engine::drawHUD(){
+void fff::engine::drawHUD(sf::RenderTarget &rendertarget, sf::FloatRect &camerarect){
     for(int i = 0; i < MAXEXPLOSIVES; i += 1){
         if (!explosive[i].exists){
             continue;}

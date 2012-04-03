@@ -48,6 +48,7 @@ void fff::engine::Reset(){
     lua_getglobal(game.vm, "engine");
     lua_getfield(game.vm, -1, "startpos");
     kitty.setPosition(320, METERSTOPIXELS( lua_tonumber(game.vm, -1) ));
+    kitty.burstplayed = false;
     lua_pop(game.vm, 1);//startpos
     lua_getfield(game.vm, -1, "startvel");
     kitty.setInitialFallingSpeed(lua_tonumber(game.vm, -1));
@@ -216,6 +217,9 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
             camerarect.Width = 640;
             camerarect.Height = 480;
 
+            if ( kitty.burstInFlames() ){
+                rendertarget.Draw( kitty.getCurrentFrame() );
+            }
             rendertarget.Draw(kitty.sprite);
             for (int i = 0; i < MAXEXPLOSIVES; i += 1){
                 if (!explosive[i].exists){

@@ -15,6 +15,8 @@ fff::kitty::kitty(){
     cpSpaceSetGravity(forecastspace, (cpVect){0.f, METERSTOPIXELS(10.f)} );
     cpSpaceAddBody(forecastspace, &forecastbody);
     
+    iflames = 0;
+    
 }
 
 fff::kitty::~kitty(){
@@ -25,6 +27,12 @@ fff::kitty::~kitty(){
 
 void fff::kitty::Configure(){
     fff::SetOriginByLua(game.vm, sprite, "kitty");
+    fff::SetOriginByLua(game.vm, flames[0], "flames");
+    flames[1].SetOrigin( flames[0].GetOrigin() );
+    flames[0].SetTexture(*game.textures["flames"]);
+    flames[1].SetTexture(*game.textures["flames"]);
+    flames[1].FlipX(true);
+    burst.SetBuffer(*game.soundbuffers["burstinflames"]);
     shape = cpCircleShapeNew(body, fff::GetRadiusByLua(game.vm, "kitty"), (cpVect){0.f, 0.f} );
     cpShapeSetUserData(shape, this);
     cpShapeSetCollisionType(shape, fff::collisions::types::kitty);
@@ -86,6 +94,14 @@ bool fff::kitty::isClimbing(){
     return false;
 }
 
+bool fff::kitty::burstInFlames(){
+    cpVect vel = cpBodyGetVel(body);
+    if (vel.y > KMH_TO_PXS(1000.f)){
+        return true;
+    }
+    return false;
+}
+
 void fff::kitty::applyImpulse(float impulse){
     cpVect vel = cpBodyGetVel(body);
     if (vel.y > 0.f){
@@ -102,6 +118,19 @@ void fff::kitty::Update(){
     cpVect pos = cpBodyGetPos(body);
     lastpos = pos;
     sprite.SetPosition(pos.x, pos.y);
+    flames[0].SetPosition(pos.x, pos.y);
+    flames[1].SetPosition(pos.x, pos.y);
+    cpVect vel = cpBodyGetVel(body);
+    if (vel.y > KMH_TO_PXS(1000.f) && !burstplayed){
+        burst.Play();
+        burstplayed = true;
+    }else if (vel.y <= KMH_TO_PXS(1000.f) ){
+        burstplayed = false;
+    }
+    iflames += 1;
+    if (iflames > 1){
+        iflames = 0;
+    }
 }
 
 float fff::kitty::forecastYPositionTo(float time){
@@ -113,4 +142,8 @@ float fff::kitty::forecastYPositionTo(float time){
 
 cpVect fff::kitty::getCurrentPos(){
     return cpBodyGetPos(body);
+}
+
+sf::Sprite fff::kitty::getCurrentFrame(){
+    return flames[iflames];
 }

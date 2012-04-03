@@ -2,6 +2,7 @@
 #define _kitty_
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <chipmunk/chipmunk.h>
 
 namespace fff{
@@ -10,11 +11,16 @@ namespace fff{
         cpBody *body;
         cpShape *shape;
         sf::Sprite sprite;
+        sf::Sprite flames[2];
+        int iflames;
         
         cpSpace *forecastspace;
         cpBody forecastbody;
         
         cpVect lastpos;
+        
+        sf::Sound burst;
+        bool burstplayed;
         
         kitty();
         ~kitty();
@@ -30,11 +36,13 @@ namespace fff{
         float getVerticalSpeedPxls();
         bool isFalling();
         bool isClimbing();
+        bool burstInFlames();
         void applyImpulse(float);
         void Update();
         float forecastYPositionTo(float);
         cpVect getCurrentPos();
-         
+        sf::Sprite getCurrentFrame();
+        
     };
     
 }

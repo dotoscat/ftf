@@ -231,9 +231,9 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
                     }
                     
                     if (explosive[i].sprite.GetPosition().y < camerarect.Top){
-                        explosive[i].setArrowAtTop();
+                        explosive[i].setSignalAtTop();
                     }else{
-                        explosive[i].setArrowAtBottom();
+                        explosive[i].setSignalAtBottom();
                     }
                     explosive[i].Update( camerapos.y );
                     rendertarget.Draw(explosive[i].sprite);
@@ -258,7 +258,7 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
                 if (!explosive[i].exists){
                     continue;}
                 if ( !camerarect.Contains(explosive[i].sprite.GetPosition() ) && !explosive[i].isExploding() ){
-                    rendertarget.Draw(explosive[i].arrow);
+                    rendertarget.Draw(explosive[i].signal);
                     rendertarget.Draw(explosive[i].meters);
                 }
             }
@@ -270,18 +270,12 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
             //
         break;
         case pause:
-            //rendertarget.Draw(kitty.sprite);
-            //for (int i = 0; i < MAXEXPLOSIVES; i += 1){
-            //    rendertarget.Draw(explosive[i].sprite);
-            //}
-            //rendertarget.Draw(floor);
-            //draw hud
             rendertarget.SetView( rendertarget.GetDefaultView() );
             for(int i = 0; i < MAXEXPLOSIVES; i += 1){
                 if (!explosive[i].exists){
                     continue;}
                 if ( !camerarect.Contains(explosive[i].sprite.GetPosition() ) && !explosive[i].isExploding() ){
-                    rendertarget.Draw(explosive[i].arrow);
+                    rendertarget.Draw(explosive[i].signal);
                     rendertarget.Draw(explosive[i].meters);
                 }
             }

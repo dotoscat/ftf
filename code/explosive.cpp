@@ -25,8 +25,6 @@ fff::explosive::~explosive(){
 }
 
 void fff::explosive::loadResources(){
-    fff::SetOriginByLua(game.vm, arrow, "arrow");
-    arrow.SetTexture(*game.textures["arrow"]);
     sf::Texture &explosiontexture = *game.textures["explosion"];
     explosion.SetOrigin( explosiontexture.GetWidth()/2, explosiontexture.GetHeight()/2 );
     explosion.SetTexture( explosiontexture );
@@ -51,26 +49,42 @@ void fff::explosive::Configure(const char *object){
     lua_pop(game.vm, 2);//sound and object
     status = normal;
     acumlifespan = 0;
+    
+    //signal
+    lua_getglobal(game.vm, object);
+    lua_getfield(game.vm, -1, "signal");
+    sf::Vector2f origin;
+    lua_getfield(game.vm, -1, "originx");
+    origin.x = lua_tonumber(game.vm, -1);
+    lua_pop(game.vm, 1);//originx
+    lua_getfield(game.vm, -1, "originy");
+    origin.y = lua_tonumber(game.vm, -1);
+    lua_pop(game.vm, 1);//originy
+    signal.SetOrigin(origin);
+    lua_getfield(game.vm, -1, "texture");
+    signal.SetTexture(*game.textures[ lua_tostring(game.vm, -1) ]);
+    lua_pop(game.vm, 3);//texture, signal and object
+    //
 }
 
 void fff::explosive::setPosition(float x, float y){
     cpCircleShapeSetOffset(shape, (cpVect){x, y});
     sprite.SetPosition(x, y);
     explosion.SetPosition(x, y);
-    arrow.SetX(x);
+    signal.SetX(x);
     meters.SetX(x);
 }
 
-void fff::explosive::setArrowAtBottom(){
-    arrow.SetY(400);
+void fff::explosive::setSignalAtBottom(){
+    signal.SetY(400);
     meters.SetY(400);
-    arrow.FlipY(false);
+    signal.FlipY(false);
 }
 
-void fff::explosive::setArrowAtTop(){
-    arrow.SetY(80);
+void fff::explosive::setSignalAtTop(){
+    signal.SetY(80);
     meters.SetY(80);
-    arrow.FlipY(true);
+    signal.FlipY(true);
 }
 
 void fff::explosive::Update(float y){

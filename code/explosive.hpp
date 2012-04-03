@@ -22,7 +22,7 @@ namespace fff{
         
         sf::Sprite explosion;
         sf::Sprite sprite;
-        sf::Sprite arrow;
+        sf::Sprite signal;
         sf::Text meters;
         sf::SoundBuffer *soundbuffer;
         cpShape *shape;
@@ -35,8 +35,8 @@ namespace fff{
         void prepareShape(cpSpace *);
         void Configure(const char *);
         void setPosition(float, float);
-        void setArrowAtBottom();
-        void setArrowAtTop();
+        void setSignalAtBottom();
+        void setSignalAtTop();
         void Update(float);
         void setExploding();
         bool isExploding();

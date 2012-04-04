@@ -36,6 +36,10 @@ fff::engine::engine(){
     meters.SetPosition(120, 30);
     clock.SetColor(sf::Color::Black);
     clock.SetPosition(300, 32);
+    
+    flash = sf::Shape::Rectangle(0, 0, 640, 480, sf::Color::White);
+    txtgameover.SetString("GAME OVER\nPress 'r' to try again");
+    
 }
 
 fff::engine::~engine(){
@@ -125,6 +129,14 @@ void fff::engine::Event(sf::Event &event){
             }
             menu.Event(event);
         break;
+        case gameover:
+            if (game.crash.GetStatus() == sf::SoundSource::Playing){
+                break;
+            }
+            if (event.Type == sf::Event::KeyReleased && event.Key.Code == sf::Keyboard::R){
+                game.startEngine();
+            }
+        break;
     }
     
 }
@@ -134,12 +146,18 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
     sf::Vector3f listenerpos;
     sf::Vector2f camerapos;
     char buffer[8] = {0};
-    sf::Uint32 currenttime;
+    sf::Uint32 currenttime = game.realwindow.GetFrameTime();
     switch(status){
         case running:
-            currenttime = game.realwindow.GetFrameTime();
-            cpSpaceStep(space, currenttime/1000.f);
+            if (kitty.getHeight() > 30.f){
+                game.crash.Play();
+                status = gameover;
+                time = 0;//Will be used in gameover status
+                break;
+            }
             
+            cpSpaceStep(space, currenttime/1000.f);
+                                                
             //avoid "tunneling"
             cpSegmentQueryInfo info;
             for (int i = 0; i < MAXEXPLOSIVES; i += 1){
@@ -265,6 +283,20 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
             rendertarget.SetView( rendertarget.GetDefaultView() );
             this->drawHUD(rendertarget, camerarect);
             menu.Run(rendertarget);
+            //
+        break;
+        case gameover:
+            time += currenttime;
+            rendertarget.SetView(camera);
+            rendertarget.Draw(floor);
+            rendertarget.SetView( rendertarget.GetDefaultView() );
+            if (time < 77){
+                rendertarget.Draw(flash);
+            }
+            if (game.crash.GetStatus() != sf::SoundSource::Stopped){
+                break;
+            }
+            rendertarget.Draw(txtgameover);
             //
         break;
     }

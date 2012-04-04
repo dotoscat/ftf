@@ -87,6 +87,8 @@ void fff::_game::loadResources(){
     lua_pop(vm, 1);//soundbuffers
     //
     
+    crash.SetBuffer(*soundbuffers["crash"]);
+    crash.SetRelativeToListener(true);
     engine.loadResources();
     
 }

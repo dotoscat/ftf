@@ -29,7 +29,7 @@ namespace fff{
         std::map<std::string, sf::SoundBuffer *> soundbuffers;
         std::map<std::string, sf::Font *> fonts;
         
-        sf::Sound soundexplosion;
+        sf::Sound soundexplosion, crash;
         
         fff::mainscene mainscene;
         fff::engine engine;

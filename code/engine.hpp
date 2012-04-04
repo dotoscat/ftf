@@ -32,9 +32,13 @@ namespace fff{
         fff::kitty kitty;
         fff::explosive explosive[MAXEXPLOSIVES];
         
+        sf::Shape flash;
+        sf::Text txtgameover;
+        
         enum _status{
             running,
             pause,
+            gameover
         }status;
         
         engine_menu menu;

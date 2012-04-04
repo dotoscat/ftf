@@ -104,6 +104,7 @@ int fff::explosive::Begin(cpArbiter *arb, cpSpace *space, void *pengine){
     explosive->setExploding();
     game.playExplosion(explosive->soundbuffer, explosive->sprite.GetPosition() );
     cpSpaceAddPostStepCallback(space, fff::explosive::postStep, explosiveshape, NULL);
+    game.startTheme();
     return 0;
 }
 

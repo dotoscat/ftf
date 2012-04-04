@@ -28,6 +28,7 @@ namespace fff{
         std::map<std::string, sf::Texture *> textures;
         std::map<std::string, sf::SoundBuffer *> soundbuffers;
         std::map<std::string, sf::Font *> fonts;
+        std::map<std::string, sf::Music *> musics;
         
         sf::Sound soundexplosion, crash;
         
@@ -43,6 +44,9 @@ namespace fff{
         void continueEngine();
         void Run();
         void playExplosion(sf::SoundBuffer *, sf::Vector2f);
+        void startTheme();
+        void stopTheme();
+        void pauseTheme();
         
     };
 

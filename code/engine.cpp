@@ -94,6 +94,7 @@ void fff::engine::Event(sf::Event &event){
                     break;
                     case sf::Keyboard::Return:
                         status = pause;
+                        game.pauseTheme();
                     break;
                 }
             }else if(event.Type == sf::Event::KeyReleased){
@@ -150,6 +151,7 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
     switch(status){
         case running:
             if (kitty.getHeight() > 30.f){
+                game.stopTheme();
                 game.crash.Play();
                 status = gameover;
                 time = 0;//Will be used in gameover status
@@ -167,6 +169,7 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
                 explosive[i].setExploding();
                 game.playExplosion(explosive[i].soundbuffer, explosive[i].sprite.GetPosition() );
                 cpSpaceRemoveShape(space, explosive[i].shape);
+                game.startTheme();
                 break;
             }
             //---
@@ -303,6 +306,9 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
 }
 
 void fff::engine::Continue(){
+    if (game.musics["theme"]->GetStatus() == sf::SoundSource::Paused){
+        game.musics["theme"]->Play();
+    }
     status = running;
 }
 

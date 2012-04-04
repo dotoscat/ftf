@@ -87,6 +87,20 @@ void fff::_game::loadResources(){
     lua_pop(vm, 1);//soundbuffers
     //
     
+    //load musics
+    lua_getglobal(vm, "musics");
+    lua_pushnil(vm);
+    while(lua_next(vm, -2)){
+        musics[lua_tostring(vm, -2)] = new sf::Music();
+        file = lua_tostring(vm, -1);
+        if (!musics[lua_tostring(vm, -2)]->OpenFromFile( game+file )){
+            std::cout << "Error loding music: " << file << std::endl;}
+        lua_pop(vm, 1);//next
+    }
+    lua_pop(vm, 1);//musics
+    //
+    
+    musics["theme"]->SetLoop(true);
     crash.SetBuffer(*soundbuffers["crash"]);
     crash.SetRelativeToListener(true);
     engine.loadResources();
@@ -100,6 +114,7 @@ void fff::_game::startEngine(){
 
 void fff::_game::returnToMainScene(){
     currentscene = &mainscene;
+    this->stopTheme();
 }
 
 void fff::_game::continueEngine(){
@@ -152,6 +167,20 @@ void fff::_game::playExplosion(sf::SoundBuffer *soundbuffer, sf::Vector2f positi
     soundexplosion.SetBuffer( *soundbuffer );
     soundexplosion.SetPitch( 1.f - (rand()%3) / 10.f );
     soundexplosion.Play();
+}
+
+void fff::_game::startTheme(){
+    if (musics["theme"]->GetStatus() == sf::SoundSource::Playing){
+        return;}
+    musics["theme"]->Play();
+}
+
+void fff::_game::stopTheme(){
+    musics["theme"]->Stop();
+}
+
+void fff::_game::pauseTheme(){
+    musics["theme"]->Pause();
 }
 
 fff::_game fff::game;

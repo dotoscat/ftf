@@ -121,10 +121,10 @@ void fff::kitty::Update(){
     flames[0].SetPosition(pos.x, pos.y);
     flames[1].SetPosition(pos.x, pos.y);
     cpVect vel = cpBodyGetVel(body);
-    if (vel.y > KMH_TO_PXS(1000.f) && !burstplayed){
+    if (vel.y > KMH_TO_PXS(500.f) && !burstplayed){
         burst.Play();
         burstplayed = true;
-    }else if (vel.y <= KMH_TO_PXS(1000.f) ){
+    }else if (vel.y <= KMH_TO_PXS(500.f) ){
         burstplayed = false;
     }
     iflames += 1;

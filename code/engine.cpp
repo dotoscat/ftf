@@ -65,7 +65,9 @@ void fff::engine::Reset(){
             continue;
         }
         explosive[i].exists = false;
-        cpSpaceRemoveShape(space, explosive[i].shape);
+        if ( cpSpaceContainsShape(space, explosive[i].shape) ){
+            cpSpaceRemoveShape(space, explosive[i].shape);
+        }
     }
 }
 

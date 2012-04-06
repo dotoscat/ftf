@@ -7,6 +7,7 @@
 #include "clock.hpp"
 #include "explosive.hpp"
 #include "engine_menu.hpp"
+#include "bg.hpp"
 
 #define PIXELSTOMETERS(x) x/100.f
 #define METERSTOPIXELS(x) x*100.f
@@ -34,6 +35,8 @@ namespace fff{
         
         sf::Shape flash;
         sf::Text txtgameover;
+        
+        fff::bg bg;
         
         enum _status{
             running,

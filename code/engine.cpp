@@ -81,6 +81,8 @@ void fff::engine::loadResources(){
         explosive[i].prepareShape(space);
         explosive[i].loadResources();
     }
+    bg.setRatioY(0.1f);
+    bg.loadResources();
 }
 
 void fff::engine::Event(sf::Event &event){
@@ -227,6 +229,9 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
             else{
                 camerapos.y = -240+32;
             }
+            
+            bg.Run(rendertarget, currenttime, kitty.getHeight());
+            
             camera.SetCenter(camerapos);
             
             listenerpos = sf::Listener::GetPosition();
@@ -285,6 +290,7 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
             //
         break;
         case pause:
+            bg.Run(rendertarget, currenttime, kitty.getHeight());
             rendertarget.SetView( rendertarget.GetDefaultView() );
             this->drawHUD(rendertarget, camerarect);
             menu.Run(rendertarget);
@@ -292,6 +298,7 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
         break;
         case gameover:
             time += currenttime;
+            bg.Run(rendertarget, currenttime, kitty.getHeight());
             rendertarget.SetView(camera);
             rendertarget.Draw(floor);
             rendertarget.SetView( rendertarget.GetDefaultView() );

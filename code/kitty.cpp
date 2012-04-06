@@ -16,6 +16,7 @@ fff::kitty::kitty(){
     cpSpaceAddBody(forecastspace, &forecastbody);
     
     iflames = 0;
+    burstinflames = false;
     
 }
 
@@ -95,11 +96,7 @@ bool fff::kitty::isClimbing(){
 }
 
 bool fff::kitty::burstInFlames(){
-    cpVect vel = cpBodyGetVel(body);
-    if (vel.y > KMH_TO_PXS(1000.f)){
-        return true;
-    }
-    return false;
+    return burstinflames;
 }
 
 void fff::kitty::applyImpulse(float impulse){
@@ -121,11 +118,11 @@ void fff::kitty::Update(){
     flames[0].SetPosition(pos.x, pos.y);
     flames[1].SetPosition(pos.x, pos.y);
     cpVect vel = cpBodyGetVel(body);
-    if (vel.y > KMH_TO_PXS(500.f) && !burstplayed){
+    if (vel.y > KMH_TO_PXS(500.f) && !burstinflames){
         burst.Play();
-        burstplayed = true;
+        burstinflames = true;
     }else if (vel.y <= KMH_TO_PXS(500.f) ){
-        burstplayed = false;
+        burstinflames = false;
     }
     iflames += 1;
     if (iflames > 1){

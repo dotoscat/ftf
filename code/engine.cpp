@@ -52,7 +52,7 @@ void fff::engine::Reset(){
     lua_getglobal(game.vm, "engine");
     lua_getfield(game.vm, -1, "startpos");
     kitty.setPosition(320, METERSTOPIXELS( lua_tonumber(game.vm, -1) ));
-    kitty.burstplayed = false;
+    kitty.burstinflames = false;
     lua_pop(game.vm, 1);//startpos
     lua_getfield(game.vm, -1, "startvel");
     kitty.setInitialFallingSpeed(lua_tonumber(game.vm, -1));

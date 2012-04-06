@@ -20,7 +20,7 @@ namespace fff{
         cpVect lastpos;
         
         sf::Sound burst;
-        bool burstplayed;
+        bool burstinflames;
         
         kitty();
         ~kitty();

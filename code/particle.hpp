@@ -22,6 +22,7 @@ namespace fff{
                 void loadResources();
                 void Create(sf::Uint32, sf::Vector2f);
                 void Update(sf::Uint32);
+                void Reset();
             
         };
         
@@ -41,6 +42,7 @@ namespace fff{
             void setPos(float, float);
             void setLifespan(int);
             void Process(sf::RenderTarget &, sf::Uint32);
+            void Reset();
                     
     };
     

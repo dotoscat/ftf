@@ -49,6 +49,11 @@ void fff::emitter::particle::Update(sf::Uint32 time){
     sf::Vector2f pos = sprite.GetPosition();
 }
 
+
+void fff::emitter::particle::Reset(){
+    this->exists = false;
+}
+
 fff::emitter::emitter(){
     particles = NULL;
     nparticles = 0;
@@ -111,5 +116,14 @@ void fff::emitter::Process(sf::RenderTarget &rendertarget, sf::Uint32 time){
         }
         particles[i].Update(time);
         rendertarget.Draw(particles[i].sprite);
+    }
+}
+
+void fff::emitter::Reset(){
+    if (particles == NULL){
+        return;
+    }
+    for(int i = 0; i < nparticles; i += 1){
+        particles[i].Reset();
     }
 }

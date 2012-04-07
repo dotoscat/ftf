@@ -70,6 +70,7 @@ void fff::engine::Reset(){
             cpSpaceRemoveShape(space, explosive[i].shape);
         }
     }
+    emitter.Reset();
 }
 
 void fff::engine::loadResources(){
@@ -84,8 +85,8 @@ void fff::engine::loadResources(){
     }
     bg.setRatioY(0.1f);
     bg.loadResources();
-    emitter.setParticles(24);
-    emitter.setParticlesPerSec(2);
+    emitter.setParticles(12);
+    emitter.setParticlesPerSec(3);
     emitter.setLifespan(4000);
     emitter.loadResources();
 }

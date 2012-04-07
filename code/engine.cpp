@@ -39,6 +39,7 @@ fff::engine::engine(){
     
     flash = sf::Shape::Rectangle(0, 0, 640, 480, sf::Color::White);
     txtgameover.SetString("GAME OVER\nPress 'r' to try again");
+    txtgameover.SetColor(sf::Color::Black);
     
 }
 

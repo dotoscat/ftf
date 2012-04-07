@@ -8,6 +8,7 @@
 #include "explosive.hpp"
 #include "engine_menu.hpp"
 #include "bg.hpp"
+#include "particle.hpp"
 
 #define PIXELSTOMETERS(x) x/100.f
 #define METERSTOPIXELS(x) x*100.f
@@ -37,6 +38,7 @@ namespace fff{
         sf::Text txtgameover;
         
         fff::bg bg;
+        fff::emitter emitter;
         
         enum _status{
             running,

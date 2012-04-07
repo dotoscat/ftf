@@ -71,6 +71,11 @@ float fff::kitty::getHeight(){
     return pos.y;
 }
 
+float fff::kitty::getX(){
+    cpVect pos = cpBodyGetPos(body);
+    return pos.x;
+}
+
 float fff::kitty::getVerticalSpeed(){
     cpVect vel = cpBodyGetVel(body);
     return PXS_TO_KMH(vel.y);

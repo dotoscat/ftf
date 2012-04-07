@@ -1,10 +1,21 @@
+#include <iostream>
 #include "particle.hpp"
 #include "auxiliar.hpp"
 #include "game.hpp"
 
+fff::emitter::particle::particle(){
+    exists = false;
+}
+
+void fff::emitter::particle::loadResources(){
+    sprite.SetTexture(*game.textures["smoke"]);
+    fff::SetOriginByLua(game.vm, sprite, "smoke");
+}
+
 void fff::emitter::particle::Create(sf::Uint32 lifespan, sf::Vector2f pos){
     exists = true;
     this->lifespan = lifespan;
+    storetime = 0;
     scale.x = 1.f;
     scale.y = 1.f;
     alpha = 255.f;
@@ -16,27 +27,32 @@ void fff::emitter::particle::Create(sf::Uint32 lifespan, sf::Vector2f pos){
 }
 
 void fff::emitter::particle::Update(sf::Uint32 time){
-    if (storetime > time){
+    if (storetime > lifespan){
         exists = false;
         return;
     }
     storetime += time;
-    scale.x += 0.1f;
-    scale.y += 0.1f;
+    scale.x += 0.01f;
+    scale.y += 0.01f;
     alpha -= 1.f;
     if (alpha < 0.f){
         alpha = 0.f;
+    }
+    if (alpha > 255.f){
+        alpha = 255.f;
     }
     sprite.SetScale(scale);
     sf::Color color = sprite.GetColor();
     color.a = alpha;
     sprite.SetColor(color);
-    sprite.Move(1.f, 0.f);
+    sprite.Move(0.f, -128.f*(time/1000.f));
+    sf::Vector2f pos = sprite.GetPosition();
 }
 
 fff::emitter::emitter(){
     particles = NULL;
     nparticles = 0;
+    storetime = 0;
 }
 
 fff::emitter::~emitter(){
@@ -58,8 +74,7 @@ void fff::emitter::loadResources(){
         return;
     }
     for (int i = 0; i < nparticles; i += 1){
-        particles[i].sprite.SetTexture(*game.textures[""]);
-        fff::SetOriginByLua(game.vm, particles[i].sprite, "smoke");
+        particles[i].loadResources();
     }
 }
 
@@ -91,7 +106,7 @@ void fff::emitter::Process(sf::RenderTarget &rendertarget, sf::Uint32 time){
         storetime = 0;
     }
     for (int i = 0; i < nparticles; i += 1){
-        if (particles[i].exists){
+        if (!particles[i].exists){
             continue;
         }
         particles[i].Update(time);

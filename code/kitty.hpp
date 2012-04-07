@@ -32,6 +32,7 @@ namespace fff{
         void moveRight();
         void stopMovingRight();
         float getHeight();
+        float getX();
         float getVerticalSpeed();
         float getVerticalSpeedPxls();
         bool isFalling();

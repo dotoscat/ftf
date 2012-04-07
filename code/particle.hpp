@@ -18,6 +18,8 @@ namespace fff{
                 mutable sf::Sprite sprite;
             
             public:
+                particle();
+                void loadResources();
                 void Create(sf::Uint32, sf::Vector2f);
                 void Update(sf::Uint32);
             

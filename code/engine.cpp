@@ -83,6 +83,10 @@ void fff::engine::loadResources(){
     }
     bg.setRatioY(0.1f);
     bg.loadResources();
+    emitter.setParticles(24);
+    emitter.setParticlesPerSec(2);
+    emitter.setLifespan(4000);
+    emitter.loadResources();
 }
 
 void fff::engine::Event(sf::Event &event){
@@ -154,11 +158,12 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
     sf::Uint32 currenttime = game.realwindow.GetFrameTime();
     switch(status){
         case running:
-            if (kitty.getHeight() > 30.f){
+            if (kitty.getHeight() > -32.f){
                 game.stopTheme();
                 game.crash.Play();
                 status = gameover;
                 time = 0;//Will be used in gameover status
+                emitter.setPos(kitty.getX(), -32);
                 break;
             }
             
@@ -301,6 +306,7 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
             bg.Run(rendertarget, currenttime, kitty.getHeight());
             rendertarget.SetView(camera);
             rendertarget.Draw(floor);
+            emitter.Process(rendertarget, currenttime);
             rendertarget.SetView( rendertarget.GetDefaultView() );
             if (time < 77){
                 rendertarget.Draw(flash);

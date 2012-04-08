@@ -4,10 +4,21 @@
 fff::engine_menu::engine_menu(){
     bg = sf::Shape::Rectangle(0, 0, 640, 480, sf::Color(0, 0, 0, 128));
     iselection = 0;
-    selection[0].SetString("CONTINUE");
+    selection[0].SetString("Continue");
     selection[0].SetColor(sf::Color(200, 200, 255));
-    selection[1].SetString("EXIT");
+    selection[1].SetString("Exit");
     selection[1].SetPosition(0, 30);
+}
+
+void fff::engine_menu::Reset(){
+    iselection = 0;
+    selection[0].SetColor(sf::Color(200, 200, 255));
+    selection[1].SetColor(sf::Color::White);
+}
+
+void fff::engine_menu::loadResources(){
+    selection[0].SetFont(*game.fonts["baroque"]);
+    selection[1].SetFont(*game.fonts["baroque"]);
 }
 
 void fff::engine_menu::Event(sf::Event &event){

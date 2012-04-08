@@ -14,6 +14,8 @@ namespace fff{
         public:
         
             engine_menu();
+            void Reset();
+            void loadResources();
             void Event(sf::Event &);
             void Run(sf::RenderTarget &);
         

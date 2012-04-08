@@ -12,6 +12,7 @@ namespace fff{
         
         public:
             mainscene();
+            void loadResources();
             void Event(sf::Event &);
             void Run(sf::RenderTarget &);
             

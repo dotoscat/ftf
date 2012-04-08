@@ -3,13 +3,16 @@
 
 fff::mainscene::mainscene(){
     title.SetString("Free For Fall");
-    //title.SetFont(*game.fonts["baroque"]);
-    title.SetColor(sf::Color::Black);
+    title.SetColor(sf::Color::White);
     title.SetPosition(120, 64);
     instruction.SetString("Press any key for start");
-    //instruction.SetFont(*game.fonts["baroque"]);
-    instruction.SetColor(sf::Color::Black);
+    instruction.SetColor(sf::Color::White);
     instruction.SetPosition(120, 120);
+}
+
+void fff::mainscene::loadResources(){
+    title.SetFont(*game.fonts["baroque"]);
+    instruction.SetFont(*game.fonts["baroque"]);
 }
 
 void fff::mainscene::Event(sf::Event &event){

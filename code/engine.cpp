@@ -71,6 +71,7 @@ void fff::engine::Reset(){
         }
     }
     emitter.Reset();
+    menu.Reset();
 }
 
 void fff::engine::loadResources(){
@@ -89,6 +90,8 @@ void fff::engine::loadResources(){
     emitter.setParticlesPerSec(3);
     emitter.setLifespan(4000);
     emitter.loadResources();
+    menu.loadResources();
+    txtgameover.SetFont(*game.fonts["baroque"]);
 }
 
 void fff::engine::Event(sf::Event &event){

@@ -33,7 +33,12 @@ fff::_game::~_game(){
     for(afont = fonts.begin(); afont != fonts.end(); afont++){
         delete afont->second;
     }
-
+    
+    std::map<std::string, sf::Music *>::iterator amusic;
+    for(amusic = musics.begin(); amusic != musics.end(); amusic++){
+        delete amusic->second;
+    }
+    
     lua_close(vm);
 
 }
@@ -56,6 +61,7 @@ void fff::_game::loadResources(){
         file = lua_tostring(vm, -1);
         if (!textures[lua_tostring(vm, -2)]->LoadFromFile( game+file )){
             std::cout << "Error loding textures: " << file << std::endl;}
+
         lua_pop(vm, 1);//next
     }
     lua_pop(vm, 1);//textures
@@ -103,6 +109,7 @@ void fff::_game::loadResources(){
     musics["theme"]->SetLoop(true);
     crash.SetBuffer(*soundbuffers["crash"]);
     crash.SetRelativeToListener(true);
+    mainscene.loadResources();
     engine.loadResources();
     
 }

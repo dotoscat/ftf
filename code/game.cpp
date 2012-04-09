@@ -5,7 +5,7 @@
 
 fff::_game::_game(){
     
-    realwindow.Create(sf::VideoMode(640, 480), "Free For Fall", sf::Style::Titlebar | sf::Style::Close);
+    realwindow.Create(sf::VideoMode(640, 480), "Free To Fall", sf::Style::Titlebar | sf::Style::Close);
     realwindow.SetFramerateLimit(120);
     realwindow.EnableKeyRepeat(false);
     clearcolor = sf::Color(135, 206, 255);

@@ -159,7 +159,7 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
     sf::FloatRect camerarect;
     sf::Vector3f listenerpos;
     sf::Vector2f camerapos;
-    char buffer[8] = {0};
+    char buffer[12] = {0};
     sf::Uint32 currenttime = game.realwindow.GetFrameTime();
     switch(status){
         case running:
@@ -188,10 +188,10 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
             }
             //---
                         
-            snprintf(buffer, 8, "%g", kitty.getVerticalSpeed() );
+            snprintf(buffer, 12, "%g", kitty.getVerticalSpeed() );
             speed.SetString(buffer);
             
-            snprintf(buffer, 8, "%g", PIXELSTOMETERS(-kitty.getHeight()) );
+            snprintf(buffer, 12, "%g", PIXELSTOMETERS(-kitty.getHeight()) );
             height.SetString(buffer);
             
             time += currenttime;

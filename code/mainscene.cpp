@@ -2,7 +2,7 @@
 #include "mainscene.hpp"
 
 fff::mainscene::mainscene(){
-    title.SetString("Free Tor Fall");
+    title.SetString("Free To Fall");
     title.SetColor(sf::Color::White);
     title.SetPosition(120, 64);
     instruction.SetString("Press Return key");

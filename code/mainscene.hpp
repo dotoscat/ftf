@@ -2,6 +2,7 @@
 #define _mainscene_
 
 #include "scene.hpp"
+#include "bg.hpp"
 
 namespace fff{
     
@@ -9,6 +10,8 @@ namespace fff{
         
         sf::Text title;
         sf::Text instruction;
+        
+        fff::bg bg;
         
         public:
             mainscene();

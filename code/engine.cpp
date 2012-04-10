@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdio>
+#include <cmath>
 #include <cfloat>
 #include <SFML/Audio.hpp>
 #include "engine.hpp"
@@ -28,12 +29,18 @@ fff::engine::engine(){
     speed.SetColor(sf::Color::Black);
     km_h.SetString("km/h");
     km_h.SetColor(sf::Color::Black);
-    km_h.SetX(120);
+    km_h.SetX(200);
     height.SetColor(sf::Color::Black);
     height.SetPosition(0, 30);
     meters.SetString("meters");
     meters.SetColor(sf::Color::Black);
-    meters.SetPosition(120, 30);
+    meters.SetPosition(200, 30);
+    ascending.SetString("ascending");
+    ascending.SetColor(sf::Color::Black);
+    ascending.SetX(300);
+    falling.SetString("falling");
+    falling.SetColor(sf::Color::Black);
+    falling.SetX(300);
     clock.SetColor(sf::Color::Black);
     clock.SetPosition(300, 32);
     
@@ -188,10 +195,10 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
             }
             //---
                         
-            snprintf(buffer, 13, "%g", kitty.getVerticalSpeed() );
+            snprintf(buffer, 13, "%g", fabs( kitty.getVerticalSpeed() ) );
             speed.SetString(buffer);
             
-            snprintf(buffer, 13, "%g", PIXELSTOMETERS(-kitty.getHeight()) );
+            snprintf(buffer, 13, "%g", PIXELSTOMETERS( fabsf( kitty.getHeight() ) ) );
             height.SetString(buffer);
             
             time += currenttime;
@@ -403,5 +410,10 @@ void fff::engine::drawHUD(sf::RenderTarget &rendertarget, sf::FloatRect &camerar
     rendertarget.Draw(km_h);
     rendertarget.Draw(height);
     rendertarget.Draw(meters);
+    if (kitty.isFalling()){
+        rendertarget.Draw(falling);
+    }else{
+        rendertarget.Draw(ascending);
+    }
     rendertarget.Draw(clock);
 }

@@ -29,6 +29,8 @@ namespace fff{
         sf::Text height;
         sf::Text meters;
         
+        sf::Text ascending, falling;
+        
         sf::Uint32 time;
         
         fff::kitty kitty;

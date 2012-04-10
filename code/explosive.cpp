@@ -12,7 +12,7 @@ fff::explosive::explosive(){
     exists = false;
     impulse = 0.f;
     meters.SetColor(sf::Color::Black);
-    meters.SetCharacterSize(14);
+    meters.SetCharacterSize(22);
     shape = NULL;
     soundbuffer = NULL;
     lifespan = 5000;//5 secs

@@ -1,7 +1,9 @@
 #include <string>
 #include <cstdlib>
+#include <cstdio>
 #include <iostream>
 #include "game.hpp"
+#include "save.hpp"
 
 fff::_game::_game(){
     
@@ -13,7 +15,7 @@ fff::_game::_game(){
     soundexplosion.SetAttenuation(0.001);
     
     currentscene = &mainscene;
-    
+        
     vm = luaL_newstate();
 }
 
@@ -112,6 +114,13 @@ void fff::_game::loadResources(){
     mainscene.loadResources();
     engine.loadResources();
     
+    recordmeters = save.getMeters();
+    recordclock = save.getClock();
+    
+    char buffer[255] = {0};
+    snprintf(buffer, 255, "%g meters\t%s", recordmeters, recordclock.getString() );
+    mainscene.setRecord(buffer);
+    
 }
 
 void fff::_game::startEngine(){
@@ -122,6 +131,16 @@ void fff::_game::startEngine(){
 void fff::_game::returnToMainScene(){
     currentscene = &mainscene;
     this->stopTheme();
+    fff::clock engineclock = engine.getClock();
+    float enginemeters = engine.getHeight();
+    if (enginemeters > recordmeters){
+        engine.saveScore();
+        recordclock = engineclock;
+        recordmeters = enginemeters;
+        char buffer[255] = {0};
+        snprintf(buffer, 255, "%g meters\t%s", recordmeters, recordclock.getString() );
+        mainscene.setRecord(buffer);
+    }
 }
 
 void fff::_game::continueEngine(){

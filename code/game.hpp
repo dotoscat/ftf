@@ -9,6 +9,7 @@
 #include "scene.hpp"
 #include "mainscene.hpp"
 #include "engine.hpp"
+#include "clock.hpp"
 
 #define KMH_TO_PXS(x) x*1000.f/3600.f*100.f  //x*1000.f/60.f/60.f*100.f
 #define PXS_TO_KMH(x) x/100.f*3600.f/1000.f  //x/100.f*60.f*60.f/1000.f
@@ -35,6 +36,9 @@ namespace fff{
         fff::mainscene mainscene;
         fff::engine engine;
         fff::scene *currentscene;
+        
+        float recordmeters;
+        fff::clock recordclock;
         
         _game();
         ~_game();

@@ -49,7 +49,7 @@ namespace fff{
         }status;
         
         engine_menu menu;
-        
+                
         public:
             engine();
             ~engine();
@@ -58,6 +58,9 @@ namespace fff{
             void Event(sf::Event &);
             void Run(sf::RenderTarget &);
             void Continue();
+            void saveScore();
+            float getHeight();
+            fff::clock getClock();
         
         protected:
             int createExplosive();

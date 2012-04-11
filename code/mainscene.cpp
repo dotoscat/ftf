@@ -9,6 +9,10 @@ fff::mainscene::mainscene(){
     instruction.SetCharacterSize(22);
     instruction.SetColor(sf::Color::Black);
     instruction.SetPosition(120, 120);
+    
+    record.SetPosition(120, 150);
+    record.SetColor(sf::Color::Black);
+    
 }
 
 void fff::mainscene::loadResources(){
@@ -27,4 +31,9 @@ void fff::mainscene::Run(sf::RenderTarget &rendertarget){
     bg.Run(rendertarget, 0, 0.f);
     rendertarget.Draw(title);
     rendertarget.Draw(instruction);
+    rendertarget.Draw(record);
+}
+
+void fff::mainscene::setRecord(char *txtrecord){
+    record.SetString(txtrecord);
 }

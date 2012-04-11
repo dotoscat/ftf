@@ -8,14 +8,20 @@
 namespace fff{
     
     class clock{
-        sf::Uint32 ms;
-        sf::Uint32 secs;
-        sf::Uint32 min;
-        sf::Uint32 hours;
         
         char buffer[12];//+\0
+
+        public:
+
+            sf::Uint32 ms;
+            sf::Uint32 seconds;
+            sf::Uint32 minutes;
+            sf::Uint32 hours;
         
         public:
+            bool operator<(fff::clock &);
+            clock(){};
+            clock(const fff::clock &);//copy constructor
             void Reset();
             void Update(sf::Uint32);
             char *getString();

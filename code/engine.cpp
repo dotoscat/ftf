@@ -6,6 +6,7 @@
 #include "engine.hpp"
 #include "game.hpp"
 #include "collisions.hpp"
+#include "save.hpp"
 
 using namespace fff::collisions;
 
@@ -339,6 +340,10 @@ void fff::engine::Continue(){
     status = running;
 }
 
+void fff::engine::saveScore(){
+    save.saveNewScore( PIXELSTOMETERS( fabsf( kitty.getHeight() ) ), engineclock);
+}
+
 int fff::engine::createExplosive(){
     
     int i = 0;
@@ -416,4 +421,12 @@ void fff::engine::drawHUD(sf::RenderTarget &rendertarget, sf::FloatRect &camerar
         rendertarget.Draw(ascending);
     }
     rendertarget.Draw(clock);
+}
+
+float fff::engine::getHeight(){
+    return PIXELSTOMETERS( fabsf( kitty.getHeight() ) );
+}
+
+fff::clock fff::engine::getClock(){
+    return engineclock;
 }

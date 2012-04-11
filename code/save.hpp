@@ -2,6 +2,7 @@
 #define  _save_
 
 #include <sqlite3.h>
+#include "clock.hpp"
 
 namespace fff{
     
@@ -13,6 +14,10 @@ namespace fff{
             _save();
             ~_save();
     
+            float getMeters();
+            fff::clock getClock();
+            void saveNewScore(float, fff::clock &);
+            
     };
     
     extern fff::_save save;

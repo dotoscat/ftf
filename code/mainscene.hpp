@@ -11,6 +11,8 @@ namespace fff{
         sf::Text title;
         sf::Text instruction;
         
+        sf::Text record;
+        
         fff::bg bg;
         
         public:
@@ -18,6 +20,7 @@ namespace fff{
             void loadResources();
             void Event(sf::Event &);
             void Run(sf::RenderTarget &);
+            void setRecord(char *);
             
     };
     

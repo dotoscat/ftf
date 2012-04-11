@@ -16,13 +16,21 @@ fff::engine::engine(){
     cpSpaceSetGravity(space, (cpVect){0.f, METERSTOPIXELS(10.f)});
         
     cpSpaceAddCollisionHandler(space, types::explosive, types::kitty, fff::explosive::Begin, NULL, NULL, NULL, this);
+    cpSpaceAddCollisionHandler(space, types::kitty, types::leftlimit, NULL, fff::engine::preSolve_kitty_leftlimit, NULL, NULL, this);
+    cpSpaceAddCollisionHandler(space, types::kitty, types::rightlimit, NULL, fff::engine::preSolve_kitty_rightlimit, NULL, NULL, this);
     
     cpSpaceAddBody(space, kitty.body);
     
     shapeleftlimit = cpSegmentShapeNew(cpSpaceGetStaticBody(space), (cpVect){-4.f, 0.f}, (cpVect){-4.f, -FLT_MAX}, 4.f);
+    cpShapeSetCollisionType(shapeleftlimit, types::leftlimit);
+    cpShapeSetSensor(shapeleftlimit, cpTrue);
     cpSpaceAddShape(space, shapeleftlimit);
+    
     shaperightlimit = cpSegmentShapeNew(cpSpaceGetStaticBody(space), (cpVect){640+4.f, 0.f}, (cpVect){640+4.f, -FLT_MAX}, 4.f);
+    cpShapeSetCollisionType(shaperightlimit, types::rightlimit);
+    cpShapeSetSensor(shaperightlimit, cpTrue);
     cpSpaceAddShape(space, shaperightlimit);
+    
     floor.SetPosition(0, 0);
     camera.SetCenter(320, 240);
     camera.SetSize(640, 480);
@@ -78,6 +86,7 @@ void fff::engine::Reset(){
             cpSpaceRemoveShape(space, explosive[i].shape);
         }
     }
+    kitty.Reset();//reset kitty impulses
     emitter.Reset();
     menu.Reset();
 }
@@ -429,4 +438,24 @@ float fff::engine::getHeight(){
 
 fff::clock fff::engine::getClock(){
     return engineclock;
+}
+
+int fff::engine::preSolve_kitty_leftlimit(cpArbiter *arb, cpSpace *space, void *data){
+    CP_ARBITER_GET_BODIES(arb, kittybody, spacebody);
+    fff::kitty *kitty = static_cast<fff::kitty *>( cpBodyGetUserData(kittybody) );
+    cpVect vel = cpBodyGetVel(kittybody);
+    if (vel.x < 0.f){
+        kitty->stopMovingLeft();
+    }
+    return 0;
+}
+
+int fff::engine::preSolve_kitty_rightlimit(cpArbiter *arb, cpSpace *space, void *data){
+    CP_ARBITER_GET_BODIES(arb, kittybody, spacebody);
+    fff::kitty *kitty = static_cast<fff::kitty *>( cpBodyGetUserData(kittybody) );
+    cpVect vel = cpBodyGetVel(kittybody);
+    if (vel.x > 0.f){
+        kitty->stopMovingRight();
+    }
+    return 0;
 }

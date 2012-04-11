@@ -10,6 +10,8 @@ namespace fff{
         namespace types{
             extern cpCollisionType kitty;
             extern cpCollisionType explosive;
+            extern cpCollisionType leftlimit;
+            extern cpCollisionType rightlimit;
         }
         
         namespace groups{

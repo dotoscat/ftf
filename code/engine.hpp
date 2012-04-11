@@ -61,7 +61,10 @@ namespace fff{
             void saveScore();
             float getHeight();
             fff::clock getClock();
-        
+            
+            static int preSolve_kitty_leftlimit(cpArbiter *, cpSpace * , void *);
+            static int preSolve_kitty_rightlimit(cpArbiter *, cpSpace * , void *);
+            
         protected:
             int createExplosive();
             bool generateExplosive();

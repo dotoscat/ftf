@@ -18,12 +18,21 @@ fff::kitty::kitty(){
     iflames = 0;
     burstinflames = false;
     
+    leftimpulse = false;
+    rightimpulse = false;
+
 }
 
 fff::kitty::~kitty(){
     cpBodyFree(body);
     cpShapeFree(shape);
     cpSpaceFree(forecastspace);
+}
+
+void fff::kitty::Reset(){
+    rightimpulse = false;
+    leftimpulse = false;
+    cpBodyResetForces(body);
 }
 
 void fff::kitty::Configure(){
@@ -51,19 +60,31 @@ void fff::kitty::setPosition(float x, float y){
 }
 
 void fff::kitty::moveLeft(){
+    if (leftimpulse){
+        return;}
     cpBodyApplyImpulse(body, (cpVect){-640.f, 0.f}, cpvzero);
+    leftimpulse = true;
 }
 
 void fff::kitty::stopMovingLeft(){
+    if (!leftimpulse){
+        return;}
     cpBodyApplyImpulse(body, (cpVect){640.f, 0.f}, cpvzero);
+    leftimpulse = false;
 }
 
 void fff::kitty::moveRight(){
+    if (rightimpulse){
+        return;}
     cpBodyApplyImpulse(body, (cpVect){640.f, 0.f}, cpvzero);
+    rightimpulse = true;
 }
 
 void fff::kitty::stopMovingRight(){
+    if (!rightimpulse){
+        return;}
     cpBodyApplyImpulse(body, (cpVect){-640.f, 0.f}, cpvzero);
+    rightimpulse = false;
 }
 
 float fff::kitty::getHeight(){

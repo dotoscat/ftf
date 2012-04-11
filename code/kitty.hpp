@@ -21,9 +21,12 @@ namespace fff{
         
         sf::Sound burst;
         bool burstinflames;
+        bool leftimpulse;
+        bool rightimpulse;
         
         kitty();
         ~kitty();
+        void Reset();
         void Configure();
         void setInitialFallingSpeed(float);
         void setPosition(float, float);

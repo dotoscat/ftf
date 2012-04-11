@@ -7,6 +7,8 @@ namespace fff{
         namespace types{
             cpCollisionType kitty = 1;
             cpCollisionType explosive = 2;
+            cpCollisionType leftlimit = 3;
+            cpCollisionType rightlimit = 4;
         }
         
         namespace groups{

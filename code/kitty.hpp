@@ -39,7 +39,7 @@ namespace fff{
         float getVerticalSpeed();
         float getVerticalSpeedPxls();
         bool isFalling();
-        bool isClimbing();
+        bool isAscending();
         bool burstInFlames();
         void applyImpulse(float);
         void Update();

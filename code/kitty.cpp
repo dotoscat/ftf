@@ -114,7 +114,7 @@ bool fff::kitty::isFalling(){
     return false;
 }
 
-bool fff::kitty::isClimbing(){
+bool fff::kitty::isAscending(){
     cpVect vel = cpBodyGetVel(body);
     if( vel.y < 0.f){
         return true;}

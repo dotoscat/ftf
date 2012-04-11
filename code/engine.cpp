@@ -230,7 +230,7 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
                         cpSpaceAddShape(space, explosive[i].shape);
                     }
                 }
-                else if (kitty.isClimbing() && this->generateExplosiveWhileClimbing() ){
+                else if (kitty.isAscending() && this->generateExplosiveWhileAscending() ){
                     int i = this->createExplosive();
                     if (i < MAXEXPLOSIVES){
                         float x = 0.f;
@@ -401,13 +401,13 @@ bool fff::engine::generateExplosiveWhileFalling(){
     return generate;
 }
 
-bool fff::engine::generateExplosiveWhileClimbing(){
+bool fff::engine::generateExplosiveWhileAscending(){
     bool generate = false;
     lua_getglobal(game.vm, "engine");
-    lua_getfield(game.vm, -1, "explosiveclimbing");
+    lua_getfield(game.vm, -1, "explosiveascending");
     if ( (rand() % 101) <= lua_tonumber(game.vm, -1)){
         generate = true;}
-    lua_pop(game.vm, 2);//explosiveclimbing and engine
+    lua_pop(game.vm, 2);//explosiveascending and engine
     return generate;
 }
 

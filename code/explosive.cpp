@@ -15,7 +15,7 @@ fff::explosive::explosive(){
     meters.SetCharacterSize(22);
     shape = NULL;
     soundbuffer = NULL;
-    lifespan = 5000;//5 secs
+    lifespan = 2500;//2.5 secs
 }
 
 fff::explosive::~explosive(){

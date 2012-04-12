@@ -64,7 +64,7 @@ fff::_game::~_game(){
 
 void fff::_game::loadResources(){
 
-    if (luaL_dofile(vm, "code/fff.lua")){
+    if (luaL_dofile(vm, "game/fff.lua")){
         std::cout << lua_tostring(vm, -1) << std::endl;
         exit(EXIT_FAILURE);
     }

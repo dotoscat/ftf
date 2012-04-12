@@ -6,8 +6,9 @@ fff::engine_menu::engine_menu(){
     iselection = 0;
     selection[0].SetString("Continue");
     selection[0].SetColor(sf::Color(200, 200, 255));
+    selection[0].SetPosition(160, 120);
     selection[1].SetString("Exit");
-    selection[1].SetPosition(0, 30);
+    selection[1].SetPosition(160, 200);
 }
 
 void fff::engine_menu::Reset(){

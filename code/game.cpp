@@ -133,7 +133,7 @@ void fff::_game::returnToMainScene(){
     this->stopTheme();
     fff::clock engineclock = engine.getClock();
     float enginemeters = engine.getHeight();
-    if (enginemeters > recordmeters){
+    if (enginemeters > recordmeters || (enginemeters <= recordmeters && engineclock < recordclock) ){
         engine.saveScore();
         recordclock = engineclock;
         recordmeters = enginemeters;

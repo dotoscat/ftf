@@ -40,7 +40,12 @@ void fff::explosive::prepareShape(cpSpace *space){
 void fff::explosive::Configure(const char *object){
     fff::SetOriginByLua(game.vm, sprite, object);
     impulse = KMH_TO_PXS(fff::GetImpulseByLua(game.vm, object));
-    sprite.SetTexture( *game.textures[ const_cast<char *>(fff::GetTextureByLua(game.vm, object)) ] );
+    sf::IntRect rect;
+    sf::Texture *texture = game.textures[ const_cast<char *>(fff::GetTextureByLua(game.vm, object)) ];
+    sprite.SetTexture( *texture );
+    rect.Width = texture->GetWidth();
+    rect.Height = texture->GetHeight();
+    sprite.SetSubRect(rect);
     cpCircleShapeSetRadius(shape, fff::GetRadiusByLua(game.vm, object));
     exists = true;
     lua_getglobal(game.vm, object);
@@ -62,7 +67,11 @@ void fff::explosive::Configure(const char *object){
     lua_pop(game.vm, 1);//originy
     signal.SetOrigin(origin);
     lua_getfield(game.vm, -1, "texture");
-    signal.SetTexture(*game.textures[ lua_tostring(game.vm, -1) ]);
+    texture = game.textures[ lua_tostring(game.vm, -1) ];
+    signal.SetTexture(*texture);
+    rect.Width = texture->GetWidth();
+    rect.Height = texture->GetHeight();
+    signal.SetSubRect(rect);
     lua_pop(game.vm, 3);//texture, signal and object
     //
 }

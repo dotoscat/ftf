@@ -56,6 +56,7 @@ fff::engine::engine(){
     flash = sf::Shape::Rectangle(0, 0, 640, 480, sf::Color::White);
     txtgameover.SetString("GAME OVER\nPress 'r' to try again");
     txtgameover.SetColor(sf::Color::Black);
+    txtgameover.SetPosition(77, 77);
     
 }
 
@@ -101,7 +102,7 @@ void fff::engine::loadResources(){
         explosive[i].prepareShape(space);
         explosive[i].loadResources();
     }
-    bg.setRatioY(0.1f);
+    bg.setRatioY(0.01f);
     bg.loadResources();
     emitter.setParticles(12);
     emitter.setParticlesPerSec(3);

@@ -13,7 +13,7 @@
 #define PIXELSTOMETERS(x) x/100.f
 #define METERSTOPIXELS(x) x*100.f
 
-#define MAXEXPLOSIVES 3
+#define MAXEXPLOSIVES 7
 
 namespace fff{
     

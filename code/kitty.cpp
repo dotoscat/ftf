@@ -127,11 +127,13 @@ bool fff::kitty::burstInFlames(){
 
 void fff::kitty::applyImpulse(float impulse){
     cpVect vel = cpBodyGetVel(body);
-    if (vel.y > 0.f){
-        //falling
+    if (impulse < 0.f && vel.y > 0.f){
         vel.y = impulse;
-    }else{
-        //climbing
+    }else if (impulse < 0.f && vel.y < 0.f){
+        vel.y += impulse;
+    }else if (impulse > 0.f && vel.y < 0.f){
+        vel.y = impulse;
+    }else if (impulse > 0.f && vel.y > 0.f){
         vel.y += impulse;
     }
     cpBodySetVel(body, vel);

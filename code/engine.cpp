@@ -236,7 +236,7 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
                         float x = 0.f;
                         while(x <= 80 || x > 400){
                             x = rand() % 400;}
-                        float predictiony = kitty.forecastYPositionTo( 1.f+(random()%3) ) ;
+                        float predictiony = kitty.forecastYPositionTo( 1.f+(random()%2) ) ;
                         //std::cout << "Prediction climbing: " << predictiony << "; kitty height: " << kitty.getHeight() << std::endl;
                         explosive[i].setPosition( x, predictiony );
                         cpSpaceAddShape(space, explosive[i].shape);

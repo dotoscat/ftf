@@ -29,6 +29,7 @@ namespace fff{
         sf::Text instruction;
         
         sf::Text record;
+        sf::Text credits;
         
         fff::bg bg;
         

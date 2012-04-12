@@ -30,6 +30,11 @@ fff::mainscene::mainscene(){
     record.SetPosition(120, 150);
     record.SetColor(sf::Color::Black);
     
+    credits.SetString("2012 - Oscar Triano Garcia <teritriano@gmail.com>\nSEE README.txt \"CREDITS\" FOR DETAILS");
+    credits.SetCharacterSize(14);
+    credits.SetPosition(0, 480-50);
+    credits.SetColor(sf::Color::Black);
+    
 }
 
 void fff::mainscene::loadResources(){
@@ -49,6 +54,7 @@ void fff::mainscene::Run(sf::RenderTarget &rendertarget){
     rendertarget.Draw(title);
     rendertarget.Draw(instruction);
     rendertarget.Draw(record);
+    rendertarget.Draw(credits);
 }
 
 void fff::mainscene::setRecord(char *txtrecord){

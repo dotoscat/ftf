@@ -21,6 +21,7 @@ Libraries
 Chipmunk Physics
 SFML
 Lua5.1
+SQLite
 
 Graphics
 --------

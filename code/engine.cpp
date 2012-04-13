@@ -243,7 +243,7 @@ void fff::engine::Run(sf::RenderTarget &rendertarget){
                         float x = 0.f;
                         while(x <= 80 || x > 580){
                             x = rand() % 580;}
-                        float predictiony = kitty.forecastYPositionTo( 1.f+(random()%2) ) ;
+                        float predictiony = kitty.forecastYPositionTo( 1.f+(rand()%2) ) ;
                         explosive[i].setPosition( x, predictiony );
                         cpSpaceAddShape(space, explosive[i].shape);
                     }
